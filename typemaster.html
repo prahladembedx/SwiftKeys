@@ -4,1136 +4,893 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SwiftKeys — Typing Test</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0f0f13;--surface:#16161e;--surface2:#1e1e2a;--border:#2a2a3a;
-  --text:#dcdcf0;--sub:#555570;--accent:#e2b714;--correct:#50fa7b;
-  --wrong:#ff5555;--cursor:#e2b714;--scrollbar:#2a2a3a;
-}
-.theme-light{
-  --bg:#f0efeb;--surface:#ffffff;--surface2:#f5f4f0;--border:#ddddd5;
-  --text:#282832;--sub:#aaaaaa;--accent:#d97706;--correct:#16a34a;
-  --wrong:#dc2626;--cursor:#d97706;--scrollbar:#ddddd5;
-}
-.theme-hacker{
-  --bg:#000000;--surface:#050f05;--surface2:#0a180a;--border:#1a3a1a;
-  --text:#00ff41;--sub:#2a6b2a;--accent:#00ff41;--correct:#00ff41;
-  --wrong:#ff0040;--cursor:#00ff41;--scrollbar:#1a3a1a;
-}
-.theme-dracula{
-  --bg:#282a36;--surface:#21222c;--surface2:#2c2f3f;--border:#44475a;
-  --text:#f8f8f2;--sub:#6272a4;--accent:#bd93f9;--correct:#50fa7b;
-  --wrong:#ff5555;--cursor:#bd93f9;--scrollbar:#44475a;
-}
-.theme-ocean{
-  --bg:#0d1b2a;--surface:#1b2838;--surface2:#1e3045;--border:#2d4a6a;
-  --text:#cdd6f4;--sub:#4d7a9a;--accent:#00bfff;--correct:#5af78e;
-  --wrong:#ff6b6b;--cursor:#00bfff;--scrollbar:#2d4a6a;
-}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;transition:background .3s,color .3s}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:4px}
+:root{--bg:#0f0f13;--sur:#16161e;--sur2:#1e1e2a;--bor:#2a2a3a;--txt:#dcdcf0;--sub:#555570;--acc:#e2b714;--ok:#50fa7b;--err:#ff5555;--cur:#e2b714}
+.t-light{--bg:#f0efeb;--sur:#fff;--sur2:#f5f4f0;--bor:#ddddd5;--txt:#282832;--sub:#aaa;--acc:#d97706;--ok:#16a34a;--err:#dc2626;--cur:#d97706}
+.t-hacker{--bg:#000;--sur:#050f05;--sur2:#0a180a;--bor:#1a3a1a;--txt:#00ff41;--sub:#2a6b2a;--acc:#00ff41;--ok:#00ff41;--err:#ff0040;--cur:#00ff41}
+.t-dracula{--bg:#282a36;--sur:#21222c;--sur2:#2c2f3f;--bor:#44475a;--txt:#f8f8f2;--sub:#6272a4;--acc:#bd93f9;--ok:#50fa7b;--err:#ff5555;--cur:#bd93f9}
+.t-ocean{--bg:#0d1b2a;--sur:#1b2838;--sur2:#1e3045;--bor:#2d4a6a;--txt:#cdd6f4;--sub:#4d7a9a;--acc:#00bfff;--ok:#5af78e;--err:#ff6b6b;--cur:#00bfff}
+html,body{min-height:100%;background:var(--bg);color:var(--txt);font-family:'JetBrains Mono',monospace;transition:background .25s,color .25s}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--bor);border-radius:4px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
-@keyframes slideRight{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
-@keyframes shimmer{0%{opacity:.6}50%{opacity:1}100%{opacity:.6}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes sR{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
 
-/* LAYOUT */
-#app{display:flex;flex-direction:column;min-height:100vh}
-header{display:flex;align-items:center;justify-content:space-between;padding:14px 40px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100}
-.logo{font-family:'Bebas Neue';font-size:30px;letter-spacing:3px;color:var(--accent);display:flex;align-items:center;gap:10px}
-.logo span{font-size:22px}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;border-bottom:1px solid var(--bor);position:sticky;top:0;background:var(--bg);z-index:50}
+.logo{font-family:'Bebas Neue';font-size:28px;letter-spacing:3px;color:var(--acc)}
 nav{display:flex;gap:3px}
-.tab-btn{background:transparent;border:none;color:var(--sub);padding:7px 16px;border-radius:7px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;transition:all .18s}
-.tab-btn:hover{background:var(--surface2);color:var(--text)}
-.tab-btn.active{background:var(--accent);color:var(--bg);font-weight:700}
-.theme-dots{display:flex;gap:6px;align-items:center}
-.theme-dot{width:18px;height:18px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .18s}
-.theme-dot.active{border-color:var(--text);transform:scale(1.15)}
-main{flex:1;max-width:860px;width:100%;margin:0 auto;padding:28px 20px}
-.tab-panel{display:none;animation:fadeUp .25s ease}
-.tab-panel.active{display:block}
+.tb{background:transparent;border:none;color:var(--sub);padding:7px 14px;border-radius:7px;cursor:pointer;font-family:'JetBrains Mono';font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;transition:all .15s}
+.tb:hover{background:var(--sur2);color:var(--txt)}
+.tb.on{background:var(--acc);color:var(--bg);font-weight:700}
+.dots{display:flex;gap:6px;align-items:center}
+.dot{width:17px;height:17px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .18s}
+.dot.on{border-color:var(--txt);transform:scale(1.2)}
+main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
+.panel{display:none;animation:fadeUp .22s ease}
+.panel.on{display:block}
 
-/* CONFIG BAR */
-.config-bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:26px}
-.cfg-group{display:flex;gap:3px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:3px}
-.cfg-btn{background:transparent;border:none;color:var(--sub);padding:5px 13px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .15s;white-space:nowrap}
-.cfg-btn:hover{color:var(--text)}
-.cfg-btn.active{background:var(--accent);color:var(--bg);font-weight:700}
-.toggle-btn{background:transparent;border:1px solid var(--border);color:var(--sub);padding:5px 13px;border-radius:6px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .15s}
-.toggle-btn:hover{border-color:var(--sub)}
-.toggle-btn.active{background:color-mix(in srgb, var(--accent) 15%, transparent);border-color:var(--accent);color:var(--accent)}
-.cfg-sep{width:1px;background:var(--border);margin:3px 2px}
+.cfgbar{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:24px}
+.grp{display:flex;gap:3px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;padding:3px}
+.gb{background:transparent;border:none;color:var(--sub);padding:5px 13px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .14s;white-space:nowrap}
+.gb:hover{color:var(--txt)}
+.gb.on{background:var(--acc);color:var(--bg);font-weight:700}
+.tgl{background:transparent;border:1px solid var(--bor);color:var(--sub);padding:5px 13px;border-radius:6px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .14s}
+.tgl.on{background:color-mix(in srgb,var(--acc) 16%,transparent);border-color:var(--acc);color:var(--acc)}
 
-/* LIVE STATS */
-.live-stats{display:flex;justify-content:center;gap:36px;margin-bottom:18px}
-.stat-pill{text-align:center}
-.stat-val{font-family:'Bebas Neue';font-size:34px;color:var(--text);letter-spacing:1px;line-height:1}
-.stat-val.accent{color:var(--accent)}
-.stat-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+.lstats{display:flex;justify-content:center;gap:34px;margin-bottom:16px}
+.sp{text-align:center}
+.sv{font-family:'Bebas Neue';font-size:34px;color:var(--txt);letter-spacing:1px;line-height:1}
+.sv.a{color:var(--acc)}
+.sl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
 
-/* WORD DISPLAY */
-#words-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px 32px;height:210px;overflow-y:auto;cursor:text;position:relative;user-select:none}
-#words-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50px;background:linear-gradient(to bottom, transparent, var(--surface));pointer-events:none}
-#words-container{display:flex;flex-wrap:wrap;align-content:flex-start;gap:0}
-.word{display:inline-flex;align-items:center;margin:4px 7px;font-size:1.32rem;letter-spacing:.03em;line-height:1.7;position:relative;padding-bottom:2px;border-bottom:2px solid transparent;transition:border-color .1s}
-.word.active{border-bottom-color:var(--accent)}
-.word.active .caret-line{display:inline-block}
-.char{position:relative;color:var(--sub);transition:color .05s}
-.char.correct{color:var(--correct)}
-.char.wrong{color:var(--wrong);text-decoration:underline}
-.char.extra{color:var(--wrong);opacity:.8}
+/* ── WORD BOX ── */
+#wbox{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:26px 30px;height:210px;overflow-y:auto;cursor:text;position:relative;user-select:none;scrollbar-width:none;-ms-overflow-style:none}
+#wbox::-webkit-scrollbar{display:none}
+#wbox::after{content:'';position:absolute;bottom:0;left:0;right:0;height:46px;background:linear-gradient(transparent,var(--sur));pointer-events:none}
+#wcon{display:flex;flex-wrap:wrap;align-content:flex-start}
+.w{display:inline-flex;align-items:center;margin:4px 6px;font-size:1.3rem;letter-spacing:.03em;line-height:1.75;border-bottom:2px solid transparent;transition:border-color .1s}
+.w.cur{border-bottom-color:var(--acc)}
+.ch{color:var(--sub);transition:color .04s}
+.ch.ok{color:var(--ok)}
+.ch.bad{color:var(--err);text-decoration:underline}
+.ch.ex{color:var(--err);opacity:.85}
+/* CARET: pure inline — zero position:absolute */
+.cr{display:inline-block;pointer-events:none;animation:blink 1s step-end infinite;vertical-align:middle;flex-shrink:0}
+/* hidden input: position:fixed so focus() never scrolls page */
+#hi{position:fixed;top:0;left:-9999px;opacity:0;width:1px;height:1px;pointer-events:none}
+.hint{text-align:center;margin-top:10px;font-size:11px;color:var(--sub)}
+.hint kbd,.fhint kbd{background:var(--sur);border:1px solid var(--bor);padding:2px 7px;border-radius:4px;font-size:10px}
+.capswarn{text-align:center;color:var(--err);font-size:12px;margin-bottom:8px}
 
-/* CARET */
-.caret{position:absolute;top:0;pointer-events:none;animation:blink 1s step-end infinite}
-.caret-line{width:2px;background:var(--cursor);height:1.4em;border-radius:1px;display:none}
-.caret-block{width:.65ch;background:color-mix(in srgb, var(--cursor) 40%, transparent);height:1.4em;border-radius:2px;display:none}
-.caret-under{width:.65ch;height:2px;background:var(--cursor);position:absolute;bottom:0;display:none}
-#hidden-input{position:fixed;top:0;left:-9999px;opacity:0;width:1px;height:1px;pointer-events:none}
-#words-wrap::-webkit-scrollbar{display:none}
-#words-wrap{scrollbar-width:none;-ms-overflow-style:none}
+/* ── RESULTS ── */
+#res{display:none;animation:popIn .3s ease}
+.pbtxt{text-align:center;color:var(--acc);font-size:13px;margin-bottom:10px;font-weight:500;letter-spacing:.3px}
+.rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.rc{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:15px 8px;text-align:center;animation:sR .28s ease both}
+.rc.a{border-color:var(--acc)}
+.rc:nth-child(2){animation-delay:.06s}.rc:nth-child(3){animation-delay:.12s}.rc:nth-child(4){animation-delay:.18s}
+.rv{font-family:'Bebas Neue';font-size:38px;letter-spacing:1px;line-height:1}
+.rl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px}
+.cc{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:14px;margin-bottom:12px}
+.ctit{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+.achban{background:var(--sur);border:1px solid var(--acc);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-size:13px}
+.rbtn{background:transparent;color:var(--acc);border:2px solid var(--acc);padding:10px 28px;border-radius:8px;cursor:pointer;font-family:'JetBrains Mono';font-size:13px;font-weight:600;transition:all .18s;display:block;margin:4px auto}
+.rbtn:hover{background:var(--acc);color:var(--bg)}
 
-/* HINT BAR */
-.hint-bar{text-align:center;margin-top:11px;font-size:11px;color:var(--sub)}
-.hint-bar kbd{background:var(--surface);border:1px solid var(--border);padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono';font-size:10px}
-.caps-warn{text-align:center;color:var(--wrong);font-size:12px;margin-bottom:8px;animation:shimmer 1.4s infinite}
+/* ── FLOW MODE ── */
+#fwrap{display:none}
+.fcats{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.fcat{background:transparent;border:1px solid var(--bor);color:var(--sub);padding:5px 14px;border-radius:20px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .16s}
+.fcat:hover{border-color:var(--sub);color:var(--txt)}
+.fcat.on{background:var(--acc);border-color:var(--acc);color:var(--bg);font-weight:700}
+#fstage{background:var(--sur);border:1px solid var(--bor);border-radius:12px;height:260px;overflow:hidden;position:relative;cursor:text;user-select:none}
+#fstage::before{content:'';position:absolute;top:0;left:0;right:0;height:65px;background:linear-gradient(var(--sur),transparent);z-index:3;pointer-events:none}
+#fstage::after{content:'';position:absolute;bottom:0;left:0;right:0;height:65px;background:linear-gradient(transparent,var(--sur));z-index:3;pointer-events:none}
+.fring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:240px;height:78px;border:1px solid color-mix(in srgb,var(--acc) 28%,transparent);border-radius:10px;pointer-events:none;z-index:2}
+#ftrack{display:flex;flex-direction:column;align-items:center;transition:transform .36s cubic-bezier(.4,0,.2,1)}
+.fslot{height:80px;display:flex;align-items:center;justify-content:center;width:100%}
+.fword{font-family:'JetBrains Mono';font-weight:500;transition:font-size .25s,opacity .25s,color .25s;pointer-events:none}
+#fov{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;z-index:4;pointer-events:none}
+.fc{font-family:'JetBrains Mono';font-size:3rem;font-weight:600;letter-spacing:.06em;transition:color .05s}
+.fc.fp{color:var(--sub)}.fc.fo{color:var(--ok)}.fc.fb{color:var(--err);text-decoration:underline}
+.fcaret{display:inline-block;width:3px;height:1em;background:var(--cur);border-radius:2px;vertical-align:middle;animation:blink 1s step-end infinite;margin-left:2px}
+.fhint{text-align:center;margin-top:9px;font-size:11px;color:var(--sub)}
 
-/* RESULTS */
-#results-panel{animation:popIn .35s ease;display:none}
-.pb-badge{text-align:center;color:var(--accent);font-size:13px;margin-bottom:10px;font-weight:500;letter-spacing:.5px}
-.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
-.res-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 10px;text-align:center;animation:slideRight .3s ease both}
-.res-card.accent{border-color:var(--accent)}
-.res-card:nth-child(2){animation-delay:.05s}
-.res-card:nth-child(3){animation-delay:.1s}
-.res-card:nth-child(4){animation-delay:.15s}
-.res-val{font-family:'Bebas Neue';font-size:40px;letter-spacing:1px;line-height:1}
-.res-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
-.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
-.chart-title{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
-.ach-unlocked{background:var(--surface);border:1px solid var(--accent);border-radius:8px;padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:13px}
-.result-actions{display:flex;gap:10px;justify-content:center;margin-top:4px}
-.btn-restart{background:transparent;color:var(--accent);border:2px solid var(--accent);padding:10px 30px;border-radius:8px;cursor:pointer;font-family:'JetBrains Mono';font-size:14px;font-weight:600;letter-spacing:.5px;transition:all .2s}
-.btn-restart:hover{background:var(--accent);color:var(--bg)}
+/* ── STATS ── */
+.sov{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.sc{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:15px;text-align:center}
+.sc .v{font-family:'Bebas Neue';font-size:30px;color:var(--acc);letter-spacing:1px}
+.sc .l{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.3px;margin-top:2px}
+.htbl{width:100%;border-collapse:collapse;font-size:13px}
+.htbl th{padding:9px 13px;text-align:left;color:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--bor);font-weight:500}
+.htbl td{padding:8px 13px;border-bottom:1px solid color-mix(in srgb,var(--bor) 50%,transparent)}
+.htbl tr:hover td{background:var(--sur2)}
+.empty{text-align:center;color:var(--sub);padding:60px 20px;font-size:14px}
 
-/* STATS TAB */
-.stats-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-.stats-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
-.stats-card .val{font-family:'Bebas Neue';font-size:32px;color:var(--accent);letter-spacing:1px}
-.stats-card .lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px}
-.history-table{width:100%;border-collapse:collapse;font-size:13px}
-.history-table th{padding:10px 14px;text-align:left;color:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);font-weight:500}
-.history-table td{padding:9px 14px;border-bottom:1px solid color-mix(in srgb, var(--border) 50%, transparent)}
-.history-table tr:last-child td{border-bottom:none}
-.history-table tr:hover td{background:var(--surface2)}
-.empty-state{text-align:center;color:var(--sub);padding:60px 20px;font-size:14px}
+/* ── LEADERBOARD ── */
+.lbh{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.lbh input{background:var(--sur);border:1px solid var(--bor);color:var(--txt);border-radius:7px;padding:7px 12px;font-family:'JetBrains Mono';font-size:13px;width:175px;outline:none;transition:border-color .16s}
+.lbh input:focus{border-color:var(--acc)}
+.lbtbl{width:100%;border-collapse:collapse;font-size:13px}
+.lbtbl th{padding:9px 14px;text-align:left;color:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--bor);font-weight:500}
+.lbtbl td{padding:11px 14px;border-bottom:1px solid color-mix(in srgb,var(--bor) 50%,transparent)}
+.lbwpm{font-family:'Bebas Neue';font-size:24px;letter-spacing:1px;color:var(--acc)}
 
-/* ACHIEVEMENTS */
-.ach-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.ach-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;display:flex;align-items:center;gap:14px;opacity:.38;transition:all .25s}
-.ach-card.unlocked{opacity:1;border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
-.ach-icon{font-size:32px;line-height:1;min-width:36px;text-align:center}
-.ach-title{font-size:14px;font-weight:600;margin-bottom:2px}
-.ach-desc{font-size:11px;color:var(--sub)}
-.ach-check{margin-left:auto;color:var(--accent);font-size:18px;opacity:0;transition:opacity .2s}
-.ach-card.unlocked .ach-check{opacity:1}
-.ach-progress{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+/* ── ACHIEVEMENTS ── */
+.agrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.acard{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:15px 17px;display:flex;align-items:center;gap:12px;opacity:.35;transition:all .2s}
+.acard.on{opacity:1;border-color:color-mix(in srgb,var(--acc) 55%,transparent)}
+.aico{font-size:30px;min-width:34px;text-align:center}
+.atit{font-size:14px;font-weight:600;margin-bottom:2px}
+.adesc{font-size:11px;color:var(--sub)}
+.achk{margin-left:auto;color:var(--acc);font-size:16px;opacity:0}
+.acard.on .achk{opacity:1}
+.aprog{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
 
-/* LEADERBOARD */
-.lb-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
-.lb-header input{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:7px 12px;font-family:'JetBrains Mono';font-size:13px;width:180px;outline:none;transition:border-color .18s}
-.lb-header input:focus{border-color:var(--accent)}
-.lb-note{font-size:11px;color:var(--sub)}
-.lb-table{width:100%;border-collapse:collapse;font-size:13px}
-.lb-table th{padding:10px 16px;text-align:left;color:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);font-weight:500}
-.lb-table td{padding:12px 16px;border-bottom:1px solid color-mix(in srgb,var(--border) 50%,transparent)}
-.lb-table tr:last-child td{border-bottom:none}
-.rank-num{font-size:20px;font-weight:700}
-.lb-wpm{font-family:'Bebas Neue';font-size:26px;letter-spacing:1px;color:var(--accent)}
-.medal-gold{color:#ffd700}
-.medal-silver{color:#c0c0c0}
-.medal-bronze{color:#cd7f32}
-
-/* SETTINGS */
-.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.setting-row{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
-.setting-lbl{font-size:13px;color:var(--sub)}
-.setting-lbl strong{display:block;font-size:14px;color:var(--text);font-weight:500;margin-bottom:2px}
-.setting-ctrl{display:flex;gap:4px}
-.setting-btn{background:transparent;border:1px solid var(--border);color:var(--sub);padding:5px 11px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .15s}
-.setting-btn:hover{border-color:var(--sub)}
-.setting-btn.active{background:color-mix(in srgb,var(--accent) 18%,transparent);border-color:var(--accent);color:var(--accent)}
-
-/* TABLE WRAPPER */
-.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+/* ── SETTINGS ── */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.srow{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
+.slbl strong{display:block;font-size:14px;font-weight:500;margin-bottom:2px}
+.slbl{font-size:11px;color:var(--sub)}
+.sctrl{display:flex;gap:4px}
+.sbtn{background:transparent;border:1px solid var(--bor);color:var(--sub);padding:5px 11px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .14s}
+.sbtn.on{background:color-mix(in srgb,var(--acc) 18%,transparent);border-color:var(--acc);color:var(--acc)}
+.twrap{background:var(--sur);border:1px solid var(--bor);border-radius:10px;overflow:hidden}
 </style>
 </head>
 <body>
-<div id="app">
-  <header>
-    <div class="logo"><span>⌨</span> SWIFTKEYS</div>
-    <nav>
-      <button class="tab-btn active" onclick="switchTab('test')">Test</button>
-      <button class="tab-btn" onclick="switchTab('stats')">Stats</button>
-      <button class="tab-btn" onclick="switchTab('leaderboard')">Leaderboard</button>
-      <button class="tab-btn" onclick="switchTab('achievements')">Achievements</button>
-      <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
-    </nav>
-    <div class="theme-dots">
-      <div class="theme-dot active" style="background:#e2b714" onclick="setTheme('dark')" title="Dark"></div>
-      <div class="theme-dot" style="background:#d97706" onclick="setTheme('light')" title="Light"></div>
-      <div class="theme-dot" style="background:#00ff41" onclick="setTheme('hacker')" title="Hacker"></div>
-      <div class="theme-dot" style="background:#bd93f9" onclick="setTheme('dracula')" title="Dracula"></div>
-      <div class="theme-dot" style="background:#00bfff" onclick="setTheme('ocean')" title="Ocean"></div>
+
+<header>
+  <div class="logo">⌨ SWIFTKEYS</div>
+  <nav>
+    <button class="tb on" onclick="goTab('test',this)">Test</button>
+    <button class="tb" onclick="goTab('stats',this)">Stats</button>
+    <button class="tb" onclick="goTab('lb',this)">Leaderboard</button>
+    <button class="tb" onclick="goTab('ach',this)">Achievements</button>
+    <button class="tb" onclick="goTab('set',this)">Settings</button>
+  </nav>
+  <div class="dots" id="hdr-dots">
+    <div class="dot on" style="background:#e2b714" onclick="applyTheme('dark',this)" title="Dark"></div>
+    <div class="dot" style="background:#d97706" onclick="applyTheme('light',this)" title="Light"></div>
+    <div class="dot" style="background:#00ff41" onclick="applyTheme('hacker',this)" title="Hacker"></div>
+    <div class="dot" style="background:#bd93f9" onclick="applyTheme('dracula',this)" title="Dracula"></div>
+    <div class="dot" style="background:#00bfff" onclick="applyTheme('ocean',this)" title="Ocean"></div>
+  </div>
+</header>
+
+<main>
+
+<!-- ════════════ TEST ════════════ -->
+<div id="tab-test" class="panel on">
+
+  <div class="cfgbar">
+    <div class="grp" id="grp-mode">
+      <button class="gb on" onclick="setMode('time',this)">Time</button>
+      <button class="gb" onclick="setMode('words',this)">Words</button>
     </div>
-  </header>
-
-  <main>
-    <!-- ===== TEST TAB ===== -->
-    <div id="tab-test" class="tab-panel active">
-      <div id="config-area">
-        <div class="config-bar">
-          <div class="cfg-group">
-            <button class="cfg-btn active" onclick="setMode('time')">Time</button>
-            <button class="cfg-btn" onclick="setMode('words')">Words</button>
-          </div>
-          <div class="cfg-group" id="time-opts">
-            <button class="cfg-btn" onclick="setTimeLimit(15)">15s</button>
-            <button class="cfg-btn" onclick="setTimeLimit(30)">30s</button>
-            <button class="cfg-btn active" onclick="setTimeLimit(60)">60s</button>
-            <button class="cfg-btn" onclick="setTimeLimit(120)">120s</button>
-          </div>
-          <div class="cfg-group" id="word-opts" style="display:none">
-            <button class="cfg-btn" onclick="setWordCount(10)">10</button>
-            <button class="cfg-btn" onclick="setWordCount(25)">25</button>
-            <button class="cfg-btn active" onclick="setWordCount(50)">50</button>
-            <button class="cfg-btn" onclick="setWordCount(100)">100</button>
-          </div>
-          <div class="cfg-group">
-            <button class="cfg-btn active" onclick="setContent('words')">Words</button>
-            <button class="cfg-btn" onclick="setContent('quotes')">Quotes</button>
-            <button class="cfg-btn" onclick="setContent('code')">Code</button>
-          </div>
-          <div class="cfg-group" id="diff-opts">
-            <button class="cfg-btn" onclick="setDiff('easy')">Easy</button>
-            <button class="cfg-btn active" onclick="setDiff('medium')">Medium</button>
-            <button class="cfg-btn" onclick="setDiff('hard')">Hard</button>
-          </div>
-          <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center">
-            <button class="toggle-btn" id="tog-punct" onclick="toggleOpt('punct')">@ Punct</button>
-            <button class="toggle-btn" id="tog-nums" onclick="toggleOpt('nums')">123 Nums</button>
-            <button class="toggle-btn" id="tog-hard" onclick="toggleOpt('hard')">⚠ Hard</button>
-            <button class="toggle-btn" id="tog-sound" onclick="toggleOpt('sound')" style="color:var(--accent);border-color:var(--accent)">♪ Sound</button>
-          </div>
-        </div>
-      </div>
-
-      <div id="caps-warn" class="caps-warn" style="display:none">⚠ CAPS LOCK IS ON</div>
-
-      <!-- Live stats -->
-      <div class="live-stats">
-        <div class="stat-pill"><div class="stat-val accent" id="live-timer">60</div><div class="stat-lbl">time</div></div>
-        <div class="stat-pill"><div class="stat-val" id="live-wpm">0</div><div class="stat-lbl">wpm</div></div>
-        <div class="stat-pill"><div class="stat-val" id="live-acc">100%</div><div class="stat-lbl">acc</div></div>
-        <div class="stat-pill"><div class="stat-val" id="live-err">0</div><div class="stat-lbl">errors</div></div>
-      </div>
-
-      <!-- Word display -->
-      <div id="words-wrap" onclick="focusInput()">
-        <div id="words-container"></div>
-        <input id="hidden-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="handleInput(event)" onkeydown="handleKeyDown(event)">
-      </div>
-
-      <div class="hint-bar">
-        start typing to begin &nbsp;·&nbsp; <kbd>tab</kbd> to restart
-      </div>
-
-      <!-- Results panel -->
-      <div id="results-panel">
-        <div id="pb-msg" class="pb-badge" style="display:none">🎉 New Personal Best!</div>
-        <div class="results-grid">
-          <div class="res-card accent"><div class="res-val" id="r-wpm" style="color:var(--accent)">0</div><div class="res-lbl">wpm</div></div>
-          <div class="res-card"><div class="res-val" id="r-acc">0%</div><div class="res-lbl">accuracy</div></div>
-          <div class="res-card"><div class="res-val" id="r-con">0%</div><div class="res-lbl">consistency</div></div>
-          <div class="res-card"><div class="res-val" id="r-err" style="color:var(--wrong)">0</div><div class="res-lbl">errors</div></div>
-        </div>
-        <div class="results-grid" style="grid-template-columns:repeat(3,1fr)">
-          <div class="res-card" style="animation-delay:.2s"><div class="res-val" id="r-words">0</div><div class="res-lbl">correct words</div></div>
-          <div class="res-card" style="animation-delay:.25s"><div class="res-val" id="r-chars">0</div><div class="res-lbl">correct chars</div></div>
-          <div class="res-card" style="animation-delay:.3s"><div class="res-val" id="r-time">0s</div><div class="res-lbl">time taken</div></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-title">WPM over time</div>
-          <canvas id="result-chart" height="100"></canvas>
-        </div>
-        <div id="new-ach-banner" class="ach-unlocked" style="display:none">
-          <span style="font-size:20px">🏆</span>
-          <span style="color:var(--accent);font-weight:600">Achievement Unlocked!</span>
-          <span id="new-ach-names"></span>
-        </div>
-        <div class="result-actions">
-          <button class="btn-restart" onclick="initTest()">↺ Restart &nbsp;<span style="font-size:11px;opacity:.7">(tab)</span></button>
-        </div>
-      </div>
+    <div class="grp" id="grp-time">
+      <button class="gb" onclick="setTime(15,this)">15s</button>
+      <button class="gb" onclick="setTime(30,this)">30s</button>
+      <button class="gb on" onclick="setTime(60,this)">60s</button>
+      <button class="gb" onclick="setTime(120,this)">120s</button>
     </div>
-
-    <!-- ===== STATS TAB ===== -->
-    <div id="tab-stats" class="tab-panel">
-      <div id="stats-content">
-        <div class="empty-state">No tests yet. Complete a test to see your stats!</div>
-      </div>
+    <div class="grp" id="grp-wc" style="display:none">
+      <button class="gb" onclick="setWC(10,this)">10</button>
+      <button class="gb" onclick="setWC(25,this)">25</button>
+      <button class="gb on" onclick="setWC(50,this)">50</button>
+      <button class="gb" onclick="setWC(100,this)">100</button>
     </div>
-
-    <!-- ===== LEADERBOARD TAB ===== -->
-    <div id="tab-leaderboard" class="tab-panel">
-      <div class="lb-header">
-        <span style="font-size:13px;color:var(--sub)">Your name:</span>
-        <input type="text" id="lb-name" value="Player" onchange="saveName()" placeholder="Enter your name" maxlength="20">
-        <span class="lb-note">· Scores saved locally</span>
-      </div>
-      <div id="lb-content">
-        <div class="empty-state">No scores yet. Complete a test to appear on the leaderboard!</div>
-      </div>
+    <div class="grp" id="grp-cont">
+      <button class="gb on" onclick="setCont('words',this)">Words</button>
+      <button class="gb" onclick="setCont('quotes',this)">Quotes</button>
+      <button class="gb" onclick="setCont('code',this)">Code</button>
+      <button class="gb" onclick="setCont('flow',this)">⬆ Flow</button>
     </div>
-
-    <!-- ===== ACHIEVEMENTS TAB ===== -->
-    <div id="tab-achievements" class="tab-panel">
-      <div class="ach-progress" id="ach-progress">0/0 unlocked</div>
-      <div class="ach-grid" id="ach-grid"></div>
+    <div class="grp" id="grp-diff">
+      <button class="gb" onclick="setDiff('easy',this)">Easy</button>
+      <button class="gb on" onclick="setDiff('medium',this)">Medium</button>
+      <button class="gb" onclick="setDiff('hard',this)">Hard</button>
     </div>
-
-    <!-- ===== SETTINGS TAB ===== -->
-    <div id="tab-settings" class="tab-panel">
-      <div class="settings-grid">
-        <div class="setting-row">
-          <div class="setting-lbl"><strong>Caret Style</strong>Typing cursor shape</div>
-          <div class="setting-ctrl">
-            <button class="setting-btn active" id="car-line" onclick="setCaretStyle('line')">│</button>
-            <button class="setting-btn" id="car-block" onclick="setCaretStyle('block')">█</button>
-            <button class="setting-btn" id="car-under" onclick="setCaretStyle('under')">_</button>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-lbl"><strong>Sound Effects</strong>Keypress audio feedback</div>
-          <div class="setting-ctrl">
-            <button class="setting-btn active" id="snd-on" onclick="setSoundPref(true)">On</button>
-            <button class="setting-btn" id="snd-off" onclick="setSoundPref(false)">Off</button>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-lbl"><strong>Theme</strong>Visual color scheme</div>
-          <div class="setting-ctrl">
-            <div class="theme-dots">
-              <div class="theme-dot" style="background:#e2b714" onclick="setTheme('dark')" title="Dark"></div>
-              <div class="theme-dot" style="background:#d97706" onclick="setTheme('light')" title="Light"></div>
-              <div class="theme-dot" style="background:#00ff41" onclick="setTheme('hacker')" title="Hacker"></div>
-              <div class="theme-dot" style="background:#bd93f9" onclick="setTheme('dracula')" title="Dracula"></div>
-              <div class="theme-dot" style="background:#00bfff" onclick="setTheme('ocean')" title="Ocean"></div>
-            </div>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-lbl"><strong>Reset Data</strong>Clear all history & scores</div>
-          <div class="setting-ctrl">
-            <button class="setting-btn" onclick="resetData()" style="color:var(--wrong);border-color:var(--wrong)">Reset</button>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:20px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px">
-        <div style="font-size:13px;color:var(--sub);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px;font-size:10px">Keyboard Shortcuts</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px">
-          <div><kbd style="background:var(--surface2);border:1px solid var(--border);padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono';font-size:11px">Tab</kbd> <span style="color:var(--sub);margin-left:8px">Restart test</span></div>
-          <div><kbd style="background:var(--surface2);border:1px solid var(--border);padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono';font-size:11px">Esc</kbd> <span style="color:var(--sub);margin-left:8px">Reset test</span></div>
-          <div><kbd style="background:var(--surface2);border:1px solid var(--border);padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono';font-size:11px">Space</kbd> <span style="color:var(--sub);margin-left:8px">Next word</span></div>
-          <div><kbd style="background:var(--surface2);border:1px solid var(--border);padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono';font-size:11px">Backspace</kbd> <span style="color:var(--sub);margin-left:8px">Delete char</span></div>
-        </div>
-      </div>
+    <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center">
+      <button class="tgl" id="tg-pun" onclick="togOpt('pun',this)">@ Punct</button>
+      <button class="tgl" id="tg-num" onclick="togOpt('num',this)">123 Nums</button>
+      <button class="tgl" id="tg-hard" onclick="togOpt('hard',this)">⚠ Hard</button>
+      <button class="tgl on" id="tg-sound" onclick="togOpt('sound',this)">♪ Sound</button>
     </div>
-  </main>
+  </div>
+
+  <div id="capswarn" class="capswarn" style="display:none">⚠ CAPS LOCK IS ON</div>
+
+  <div class="lstats" id="lstats">
+    <div class="sp"><div class="sv a" id="lv-t">60</div><div class="sl" id="lv-tl">time</div></div>
+    <div class="sp"><div class="sv" id="lv-w">0</div><div class="sl">wpm</div></div>
+    <div class="sp"><div class="sv" id="lv-a">100%</div><div class="sl">acc</div></div>
+    <div class="sp"><div class="sv" id="lv-e">0</div><div class="sl">errors</div></div>
+  </div>
+
+  <!-- Normal typing box -->
+  <div id="wbox" onclick="focusHI()"><div id="wcon"></div></div>
+  <input id="hi" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+    oninput="onInput(event)" onkeydown="onKD(event)">
+  <div class="hint" id="nhint">start typing to begin &nbsp;·&nbsp; <kbd>tab</kbd> to restart</div>
+
+  <!-- Flow mode -->
+  <div id="fwrap">
+    <div class="fcats">
+      <button class="fcat on" onclick="setFCat('animals',this)">🐾 Animals</button>
+      <button class="fcat" onclick="setFCat('names',this)">👤 Names</button>
+      <button class="fcat" onclick="setFCat('countries',this)">🌍 Countries</button>
+      <button class="fcat" onclick="setFCat('colors',this)">🎨 Colors</button>
+      <button class="fcat" onclick="setFCat('fruits',this)">🍎 Fruits</button>
+      <button class="fcat" onclick="setFCat('cities',this)">🌆 Cities</button>
+      <button class="fcat" onclick="setFCat('numbers',this)">🔢 Numbers</button>
+    </div>
+    <div id="fstage" onclick="focusHI()">
+      <div class="fring"></div>
+      <div id="ftrack"></div>
+      <div id="fov"></div>
+    </div>
+    <div class="fhint">type word &nbsp;·&nbsp; <kbd>space</kbd> = next &nbsp;·&nbsp; <kbd>tab</kbd> = restart</div>
+  </div>
+
+  <!-- Results -->
+  <div id="res">
+    <div id="pbmsg" class="pbtxt" style="display:none">🎉 New Personal Best!</div>
+    <div class="rgrid">
+      <div class="rc a"><div class="rv" id="r-wpm" style="color:var(--acc)">0</div><div class="rl">wpm</div></div>
+      <div class="rc"><div class="rv" id="r-acc">0%</div><div class="rl">accuracy</div></div>
+      <div class="rc"><div class="rv" id="r-con">0%</div><div class="rl">consistency</div></div>
+      <div class="rc"><div class="rv" id="r-err" style="color:var(--err)">0</div><div class="rl">errors</div></div>
+    </div>
+    <div class="rgrid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="rc" style="animation-delay:.2s"><div class="rv" id="r-wds">0</div><div class="rl">correct words</div></div>
+      <div class="rc" style="animation-delay:.25s"><div class="rv" id="r-chs">0</div><div class="rl">correct chars</div></div>
+      <div class="rc" style="animation-delay:.3s"><div class="rv" id="r-tim">0s</div><div class="rl">time</div></div>
+    </div>
+    <div class="cc" id="chart-wrap"><div class="ctit">WPM over time</div><canvas id="rc-chart" height="100"></canvas></div>
+    <div id="achban" class="achban" style="display:none"><span style="font-size:20px">🏆</span><span style="color:var(--acc);font-weight:600">Achievement Unlocked!</span><span id="achnms"></span></div>
+    <button class="rbtn" onclick="boot()">↺ Restart &nbsp;<span style="font-size:11px;opacity:.7">(tab)</span></button>
+  </div>
 </div>
 
-<script>
-// ============================================================
-// WORD LISTS
-// ============================================================
-const WORDS = {
-  easy: ["the","be","to","of","and","a","in","that","have","it","for","not","on","with","he","as","you","do","at","this","but","his","by","from","they","we","say","her","she","or","an","will","my","one","all","would","there","their","what","so","up","out","if","about","who","get","which","go","me","when","make","can","like","time","no","just","him","know","take","people","into","year","your","good","some","could","them","see","other","than","then","now","look","only","come","its","over","think","also","back","after","use","two","how","our","work","first","well","way","even","new","want","any","give","day","most","us","great","between","need","large","often","hand","high","place","hold","turn","here","why","ask","went","men","read","need","land","different","home","us","move","try","kind","hand","picture","again","change","off","play","spell","air","away","animals","house","point","page","letters","mother","answer","found","study","still","learn","plant","cover","food","sun","four","between"],
-  medium: ["about","above","across","action","actually","again","against","agree","already","always","another","answer","around","article","because","become","before","between","building","certain","change","children","coming","company","complete","consider","continue","control","countries","create","decided","develop","different","direct","during","either","enough","every","example","experience","family","finally","following","found","further","given","going","government","great","group","having","helps","however","human","important","include","including","increase","interest","involved","itself","known","large","later","learn","leave","level","likely","local","longer","making","matter","might","money","month","move","national","never","number","often","order","outside","own","part","people","place","plan","point","possible","power","program","provide","public","question","rather","real","reason","recent","result","right","school","second","since","small","social","something","sometimes","still","story","study","system","taken","through","together","toward","true","under","until","usually","various","water","where","which","while","whole","within","without","world","write","young","along","always","began","being","better","both","brought","called","case","cause","city","close","come","coming","days","does","done","draw","during","early","earth","easy","end","enough","face","fact","feel","feet","fell","few","form","four","free","front","full","gave","help","hold","hour","idea","important","keep","kind","knew","last","left","life","light","line","list","live","long","look","made","main","miss","more","most","move","much","must","name","near","need","next","night","nothing","notice","once","open","own","past","place","plan","plants","play","put","real","right","room","run","said","same","saw","says","sea","seem","seen","set","show","side","simple","since","small","song","soon","state","stay","stop","sure","take","talk","these","think","thought","told","took","town","tree","turn","until","upon","voice","walk","want","watch","ways","well","went","were","what","while","white","wide","wind","wish","without","words"],
-  hard: ["accommodate","ambiguous","anomaly","apparatus","arbitrary","articulate","assassination","asterisk","bureaucratic","camouflage","catastrophic","circumference","clandestine","coincidence","commemorate","conscientious","controversial","crystallize","deteriorate","dilapidated","disappearance","disintegrate","ecclesiastical","embarrassment","exaggeration","exhilaration","extraordinary","facetious","fascinating","flabbergasted","gregarious","hallucination","hypocritical","idiosyncratic","illegitimate","incorrigible","indispensable","infrastructure","ingenious","instantaneous","juxtaposition","kaleidoscope","labyrinthine","magnificent","manipulative","metamorphosis","miscellaneous","mysterious","nonchalant","oblivious","omniscient","overwhelm","paradoxical","perseverance","phenomenon","photosynthesis","physiological","precarious","predominantly","psychologically","questionnaire","quintessential","reverberate","revolutionary","rigorous","scrupulous","silhouette","simultaneous","sophisticated","spontaneous","strenuous","subterranean","supernatural","surveillance","suspicious","synonymous","technological","tempestuous","theoretical","treacherous","unbelievable","undeniable","unnecessary","unprecedented","vaccination","vengeance","vulnerable","whimsical","zealousness","abnormality","acquaintance","acknowledgment","administration","adolescence","affectionate","alleviate","ambivalent","antagonistic","apprehension","assassination","authoritative","bewilderment","catastrophe","circumstantial","cumbersome","demonstration","deterioration","disillusionment","disproportionate","electromagnetic","embarrassingly","encyclopedic","exhaustively"]
-};
+<!-- ════════════ STATS ════════════ -->
+<div id="tab-stats" class="panel"><div id="statscon"></div></div>
 
-const QUOTES = [
-  "The only way to do great work is to love what you do. If you haven't found it yet keep looking and don't settle as with all matters of the heart you'll know when you find it.",
-  "In the middle of every difficulty lies opportunity. Success is not final failure is not fatal it is the courage to continue that counts.",
-  "It does not matter how slowly you go as long as you do not stop. Our greatest glory is not in never falling but in rising every time we fall.",
-  "The future belongs to those who believe in the beauty of their dreams. Do not watch the clock do what it does and keep going.",
-  "Believe you can and you're halfway there. Whether you think you can or you think you can't you're right. The secret of getting ahead is getting started.",
-  "Two roads diverged in a wood and I took the one less traveled by and that has made all the difference in the world.",
-  "I have not failed I've just found ten thousand ways that won't work. The secret of success is to know something nobody else knows.",
-  "Life is what happens when you're busy making other plans. In three words I can sum up everything I've learned about life it goes on.",
-  "The greatest glory in living lies not in never falling but in rising every time we fall. Do not be afraid of failure it is success in progress.",
-  "Success usually comes to those who are too busy to be looking for it. The harder you work the luckier you get.",
-  "You miss one hundred percent of the shots you don't take. Always do what you are afraid to do and the reward will be fearless.",
-  "The mind is everything what you think you become. Whether you believe you can do a thing or not you are right."
-];
+<!-- ════════════ LEADERBOARD ════════════ -->
+<div id="tab-lb" class="panel">
+  <div class="lbh">
+    <span style="font-size:13px;color:var(--sub)">Your name:</span>
+    <input id="lbname" type="text" maxlength="20" placeholder="Enter name" onchange="saveName()">
+    <span style="font-size:11px;color:var(--sub)">· Saved locally</span>
+  </div>
+  <div id="lbcon"></div>
+</div>
 
-const CODE_SNIPPETS = [
-  "function fibonacci(n) { if (n <= 1) return n; return fibonacci(n - 1) + fibonacci(n - 2); } console.log(fibonacci(10));",
-  "const arr = [1, 2, 3, 4, 5]; const doubled = arr.map(x => x * 2); const sum = arr.reduce((acc, val) => acc + val, 0);",
-  "class Stack { constructor() { this.items = []; } push(item) { this.items.push(item); } pop() { return this.items.pop(); } }",
-  "async function fetchData(url) { try { const res = await fetch(url); const data = await res.json(); return data; } catch (err) { console.error(err); } }",
-  "const sortedArr = arr.sort((a, b) => a - b); const binarySearch = (arr, target) => { let lo = 0, hi = arr.length - 1; };",
-  "import React, { useState, useEffect } from 'react'; export default function Counter() { const [count, setCount] = useState(0); return <button onClick={() => setCount(count + 1)}>{count}</button>; }",
-  "def quick_sort(arr): if len(arr) <= 1: return arr; pivot = arr[len(arr) // 2]; left = [x for x in arr if x < pivot]; return quick_sort(left) + [pivot]",
-  "SELECT users.name, orders.total FROM users INNER JOIN orders ON users.id = orders.user_id WHERE orders.total > 100 ORDER BY orders.total DESC;"
-];
+<!-- ════════════ ACHIEVEMENTS ════════════ -->
+<div id="tab-ach" class="panel">
+  <div class="aprog" id="aprog">0/0 unlocked</div>
+  <div class="agrid" id="agrid"></div>
+</div>
 
-const ACHIEVEMENTS_DEF = [
-  { id:"speed_50", icon:"⚡", title:"Speed Demon", desc:"Reach 50 WPM", check:(r,h)=>r.wpm>=50 },
-  { id:"speed_75", icon:"🚀", title:"Rocket Fingers", desc:"Reach 75 WPM", check:(r,h)=>r.wpm>=75 },
-  { id:"speed_100", icon:"💯", title:"100 WPM Club", desc:"Reach 100 WPM", check:(r,h)=>r.wpm>=100 },
-  { id:"speed_120", icon:"🔥", title:"Blazing Keys", desc:"Reach 120 WPM", check:(r,h)=>r.wpm>=120 },
-  { id:"acc_100", icon:"🎯", title:"Perfectionist", desc:"100% Accuracy", check:(r,h)=>r.accuracy===100 },
-  { id:"acc_95", icon:"✨", title:"Sharpshooter", desc:"95%+ Accuracy", check:(r,h)=>r.accuracy>=95 },
-  { id:"no_errors", icon:"🌟", title:"Zero Mistakes", desc:"Finish with 0 errors", check:(r,h)=>r.errors===0 },
-  { id:"tests_5", icon:"🏅", title:"Warming Up", desc:"Complete 5 tests", check:(r,h)=>h.length>=5 },
-  { id:"tests_10", icon:"🏆", title:"Dedicated", desc:"Complete 10 tests", check:(r,h)=>h.length>=10 },
-  { id:"tests_50", icon:"👑", title:"Master Typist", desc:"Complete 50 tests", check:(r,h)=>h.length>=50 },
-  { id:"consistency_90", icon:"📈", title:"Consistent", desc:"90%+ Consistency score", check:(r,h)=>r.consistency>=90 },
-  { id:"hard_mode", icon:"⚠️", title:"Masochist", desc:"Finish a test in hard mode", check:(r,h)=>r.hardMode },
-  { id:"code_mode", icon:"💻", title:"Code Monkey", desc:"Complete a code typing test", check:(r,h)=>r.contentMode==='code' },
-  { id:"120s_test", icon:"⏱️", title:"Marathon", desc:"Complete a 120-second test", check:(r,h)=>r.testDuration>=120 },
-];
-
-// ============================================================
-// STATE
-// ============================================================
-const S = {
-  mode: 'time', timeLimit: 60, wordCount: 50,
-  difficulty: 'medium', contentMode: 'words',
-  punct: false, nums: false, hard: false, sound: true,
-  caretStyle: 'line', theme: 'dark',
-  // Test state
-  words: [], charStatus: [], curWord: 0, curInput: '',
-  testState: 'idle', startTime: null, timeLeft: 60,
-  timer: null, liveTimer: null, wpmTrack: [],
-  correctCharsAtSecond: 0,
-  // Persistent
-  history: [], achievements: [], leaderboard: [], pb: 0, playerName: 'Player'
-};
-
-let resultChart = null;
-let progressChart = null;
-let audioCtx = null;
-
-// ============================================================
-// AUDIO
-// ============================================================
-function getAudio() {
-  if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){} }
-  return audioCtx;
-}
-function playKey(type='click') {
-  if (!S.sound) return;
-  const ctx = getAudio(); if (!ctx) return;
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.connect(gain); gain.connect(ctx.destination);
-  if (type === 'error') {
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(180, ctx.currentTime);
-    gain.gain.setValueAtTime(0.08, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.12);
-  } else if (type === 'space') {
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(600, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime+0.08);
-    gain.gain.setValueAtTime(0.06, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.08);
-  } else {
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(900, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(450, ctx.currentTime+0.04);
-    gain.gain.setValueAtTime(0.04, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.04);
-  }
-  osc.start(ctx.currentTime); osc.stop(ctx.currentTime+0.15);
-}
-
-// ============================================================
-// STORAGE
-// ============================================================
-function saveData() {
-  try {
-    localStorage.setItem('sk_history', JSON.stringify(S.history));
-    localStorage.setItem('sk_achievements', JSON.stringify(S.achievements));
-    localStorage.setItem('sk_leaderboard', JSON.stringify(S.leaderboard));
-    localStorage.setItem('sk_pb', S.pb);
-    localStorage.setItem('sk_name', S.playerName);
-    localStorage.setItem('sk_theme', S.theme);
-    localStorage.setItem('sk_caret', S.caretStyle);
-    localStorage.setItem('sk_sound', S.sound);
-  } catch(e) {}
-}
-function loadData() {
-  try {
-    S.history = JSON.parse(localStorage.getItem('sk_history') || '[]');
-    S.achievements = JSON.parse(localStorage.getItem('sk_achievements') || '[]');
-    S.leaderboard = JSON.parse(localStorage.getItem('sk_leaderboard') || '[]');
-    S.pb = +localStorage.getItem('sk_pb') || 0;
-    S.playerName = localStorage.getItem('sk_name') || 'Player';
-    const theme = localStorage.getItem('sk_theme');
-    if (theme) setTheme(theme, true);
-    const caret = localStorage.getItem('sk_caret');
-    if (caret) setCaretStyle(caret, true);
-    const snd = localStorage.getItem('sk_sound');
-    if (snd !== null) setSoundPref(snd === 'true', true);
-  } catch(e) {}
-  document.getElementById('lb-name').value = S.playerName;
-}
-function resetData() {
-  if (!confirm('Reset all history, scores, and achievements?')) return;
-  S.history = []; S.achievements = []; S.leaderboard = []; S.pb = 0;
-  saveData();
-  renderAchievements(); renderLeaderboard(); renderStats();
-  alert('Data reset!');
-}
-function saveName() {
-  S.playerName = document.getElementById('lb-name').value || 'Player';
-  saveData();
-}
-
-// ============================================================
-// WORD GENERATION
-// ============================================================
-function generateWords() {
-  if (S.contentMode === 'quotes') {
-    return QUOTES[Math.floor(Math.random()*QUOTES.length)].split(' ');
-  }
-  if (S.contentMode === 'code') {
-    return CODE_SNIPPETS[Math.floor(Math.random()*CODE_SNIPPETS.length)].split(' ');
-  }
-  const list = WORDS[S.difficulty];
-  const count = S.mode === 'time' ? 250 : S.wordCount;
-  const words = [];
-  for (let i = 0; i < count; i++) {
-    let w = list[Math.floor(Math.random()*list.length)];
-    if (S.nums && Math.random() < 0.15) w = String(Math.floor(Math.random()*999+1));
-    if (S.punct && Math.random() < 0.2) w += ['.', ',', '!', '?', ';'][Math.floor(Math.random()*5)];
-    words.push(w);
-  }
-  return words;
-}
-
-// ============================================================
-// RENDER WORDS
-// ============================================================
-function renderWords() {
-  const container = document.getElementById('words-container');
-  container.innerHTML = '';
-  S.words.forEach((word, wi) => {
-    const el = document.createElement('span');
-    el.className = 'word' + (wi === S.curWord ? ' active' : '');
-    el.id = 'word-' + wi;
-    word.split('').forEach((ch, ci) => {
-      const c = document.createElement('span');
-      c.className = 'char';
-      c.textContent = ch;
-      c.id = `c-${wi}-${ci}`;
-      el.appendChild(c);
-    });
-    container.appendChild(el);
-  });
-  renderCaret();
-}
-
-function updateWordDisplay(wi) {
-  const word = S.words[wi];
-  const typed = S.charStatus[wi] || {};
-  const el = document.getElementById('word-' + wi);
-  if (!el) return;
-  // Clear extra chars
-  const existing = el.querySelectorAll('.char');
-  existing.forEach(c => {
-    const ci = +c.id.split('-')[2];
-    const status = typed[ci];
-    c.className = 'char' + (status === 'correct' ? ' correct' : status === 'wrong' ? ' wrong' : '');
-  });
-  // Extra chars
-  el.querySelectorAll('.extra').forEach(e => e.remove());
-  const extras = Object.keys(typed).filter(k => +k >= word.length);
-  extras.forEach(k => {
-    const c = document.createElement('span');
-    c.className = 'char extra';
-    c.textContent = S.curInput[+k] || '';
-    el.appendChild(c);
-  });
-}
-
-function renderCaret() {
-  // Remove old carets
-  document.querySelectorAll('.caret').forEach(c => c.remove());
-  const wi = S.curWord;
-  const wordEl = document.getElementById('word-' + wi);
-  if (!wordEl) return;
-  const pos = S.curInput.length;
-  const chars = wordEl.querySelectorAll('.char');
-  const caret = document.createElement('span');
-  caret.className = 'caret';
-  if (S.caretStyle === 'line') {
-    caret.style.cssText = `display:inline-block;width:2px;height:1.3em;background:var(--cursor);border-radius:1px;vertical-align:middle;margin-left:-1px;animation:blink 1s step-end infinite`;
-  } else if (S.caretStyle === 'block') {
-    caret.style.cssText = `display:inline-block;width:.6ch;height:1.3em;background:color-mix(in srgb,var(--cursor) 45%,transparent);border-radius:2px;vertical-align:middle;animation:blink 1s step-end infinite`;
-  } else {
-    caret.style.cssText = `display:inline-block;width:.6ch;height:2px;background:var(--cursor);vertical-align:bottom;margin-bottom:0;animation:blink 1s step-end infinite`;
-  }
-  if (pos < chars.length) {
-    wordEl.insertBefore(caret, chars[pos]);
-  } else {
-    wordEl.appendChild(caret);
-  }
-}
-
-// ============================================================
-// INIT TEST
-// ============================================================
-function initTest() {
-  clearInterval(S.timer); clearInterval(S.liveTimer);
-  S.words = generateWords();
-  S.charStatus = S.words.map(() => ({}));
-  S.curWord = 0; S.curInput = '';
-  S.testState = 'idle'; S.startTime = null;
-  S.timeLeft = S.timeLimit; S.wpmTrack = [];
-  document.getElementById('live-timer').textContent = S.mode === 'time' ? S.timeLimit : `0/${S.wordCount}`;
-  document.getElementById('live-wpm').textContent = '0';
-  document.getElementById('live-acc').textContent = '100%';
-  document.getElementById('live-err').textContent = '0';
-  document.getElementById('hidden-input').value = '';
-  document.getElementById('results-panel').style.display = 'none';
-  document.getElementById('words-wrap').style.display = 'block';
-  document.getElementById('live-stats') && null;
-  document.querySelector('.live-stats').style.display = '';
-  document.querySelector('.hint-bar').style.display = '';
-  document.querySelector('.hint-bar').textContent = 'start typing to begin · ';
-  const kbd = document.createElement('kbd');
-  kbd.textContent = 'tab'; kbd.style.cssText = 'background:var(--surface);border:1px solid var(--border);padding:2px 7px;border-radius:4px;font-family:JetBrains Mono;font-size:10px';
-  document.querySelector('.hint-bar').appendChild(kbd);
-  document.querySelector('.hint-bar').appendChild(document.createTextNode(' to restart'));
-  renderWords();
-  document.getElementById('words-wrap').scrollTop = 0;
-  focusInput();
-}
-
-// ============================================================
-// INPUT HANDLING
-// ============================================================
-function focusInput() {
-  document.getElementById('hidden-input').focus({ preventScroll: true });
-}
-
-function handleKeyDown(e) {
-  if (e.key === 'Tab') { e.preventDefault(); initTest(); return; }
-  if (e.key === 'Escape') { initTest(); return; }
-  // Caps lock
-  document.getElementById('caps-warn').style.display = e.getModifierState('CapsLock') ? 'block' : 'none';
-}
-
-function handleInput(e) {
-  if (S.testState === 'finished') return;
-  const val = e.target.value;
-
-  // Start test on first keypress
-  if (S.testState === 'idle') {
-    S.testState = 'running';
-    S.startTime = Date.now();
-    startTimers();
-  }
-
-  // Space = next word
-  if (val.endsWith(' ')) {
-    if (S.curInput.trim() === '') { e.target.value = ''; return; }
-    commitWord();
-    e.target.value = '';
-    return;
-  }
-
-  // Hard mode: block backspace
-  if (S.hard && val.length < S.curInput.length) {
-    e.target.value = S.curInput;
-    return;
-  }
-
-  S.curInput = val;
-  // Update char status for current word
-  const word = S.words[S.curWord];
-  const status = {};
-  for (let i = 0; i < Math.max(val.length, word.length); i++) {
-    if (i < val.length && i < word.length) status[i] = val[i] === word[i] ? 'correct' : 'wrong';
-    else if (i < val.length) status[i] = 'extra';
-  }
-  S.charStatus[S.curWord] = status;
-  updateWordDisplay(S.curWord);
-  renderCaret();
-
-  // Sound
-  if (val.length > (S.curInput.length || 0)) {
-    const li = val.length - 1;
-    const isCorrect = li < word.length && val[li] === word[li];
-    playKey(isCorrect ? 'click' : 'error');
-  }
-}
-
-function scrollToActiveWord() {
-  const wrap = document.getElementById('words-wrap');
-  const wordEl = document.getElementById('word-' + S.curWord);
-  if (!wrap || !wordEl) return;
-  const wordTop = wordEl.offsetTop;
-  const wrapHeight = wrap.clientHeight;
-  // Scroll down when active word passes 50% of container height
-  if (wordTop > wrap.scrollTop + wrapHeight * 0.52) {
-    wrap.scrollTop = wordTop - Math.round(wrapHeight * 0.3);
-  }
-}
-
-function commitWord() {
-  const word = S.words[S.curWord];
-  const val = S.curInput;
-  const status = {};
-  for (let i = 0; i < Math.max(val.length, word.length); i++) {
-    if (i < val.length && i < word.length) status[i] = val[i] === word[i] ? 'correct' : 'wrong';
-    else if (i < val.length) status[i] = 'extra';
-    else status[i] = 'missing';
-  }
-  S.charStatus[S.curWord] = status;
-  updateWordDisplay(S.curWord);
-  // Mark word done
-  const wordEl = document.getElementById('word-' + S.curWord);
-  if (wordEl) {
-    wordEl.classList.remove('active');
-    const allCorrect = Object.values(status).every(s => s === 'correct');
-  }
-  playKey('space');
-  S.curWord++;
-  S.curInput = '';
-  // Check words-mode completion
-  if (S.mode === 'words' && S.curWord >= S.wordCount) { finishTest(); return; }
-  // Mark new active
-  const nextEl = document.getElementById('word-' + S.curWord);
-  if (nextEl) nextEl.classList.add('active');
-  renderCaret();
-  scrollToActiveWord();
-  updateLiveStats();
-  // Update word counter
-  if (S.mode === 'words') document.getElementById('live-timer').textContent = `${S.curWord}/${S.wordCount}`;
-}
-
-// ============================================================
-// TIMERS & LIVE STATS
-// ============================================================
-function startTimers() {
-  if (S.mode === 'time') {
-    S.timer = setInterval(() => {
-      S.timeLeft--;
-      document.getElementById('live-timer').textContent = S.timeLeft;
-      // WPM snapshot
-      const elapsed = (Date.now() - S.startTime) / 1000;
-      const cc = countCorrectChars();
-      S.wpmTrack.push({ t: Math.round(elapsed), wpm: calcWPM(cc, elapsed) });
-      if (S.timeLeft <= 0) finishTest();
-    }, 1000);
-  }
-  S.liveTimer = setInterval(updateLiveStats, 500);
-}
-
-function updateLiveStats() {
-  if (!S.startTime) return;
-  const elapsed = (Date.now() - S.startTime) / 1000;
-  const cc = countCorrectChars();
-  const errs = countErrors();
-  const total = cc + errs;
-  const acc = total > 0 ? Math.round((cc / total) * 100) : 100;
-  const wpm = calcWPM(cc, elapsed);
-  document.getElementById('live-wpm').textContent = wpm;
-  document.getElementById('live-acc').textContent = acc + '%';
-  document.getElementById('live-err').textContent = errs;
-  if (S.mode === 'words') document.getElementById('live-timer').textContent = `${S.curWord}/${S.wordCount}`;
-}
-
-function countCorrectChars() {
-  let c = 0;
-  for (let wi = 0; wi < S.curWord; wi++) {
-    const status = S.charStatus[wi] || {};
-    Object.values(status).forEach(s => { if (s === 'correct') c++; });
-  }
-  return c;
-}
-
-function countErrors() {
-  let e = 0;
-  for (let wi = 0; wi <= S.curWord; wi++) {
-    const status = S.charStatus[wi] || {};
-    Object.values(status).forEach(s => { if (s === 'wrong' || s === 'extra') e++; });
-  }
-  return e;
-}
-
-function calcWPM(correctChars, seconds) {
-  if (seconds < 0.5) return 0;
-  return Math.round((correctChars / 5) / (seconds / 60));
-}
-
-function calcConsistency(wpmData) {
-  if (wpmData.length < 2) return 100;
-  const vals = wpmData.map(d => d.wpm).filter(v => v > 0);
-  if (vals.length < 2) return 100;
-  const mean = vals.reduce((a,b)=>a+b,0) / vals.length;
-  const variance = vals.reduce((a,b)=>a+Math.pow(b-mean,2),0) / vals.length;
-  const cv = mean > 0 ? (Math.sqrt(variance)/mean)*100 : 0;
-  return Math.max(0, Math.round(100 - cv));
-}
-
-// ============================================================
-// FINISH TEST
-// ============================================================
-function finishTest() {
-  clearInterval(S.timer); clearInterval(S.liveTimer);
-  S.testState = 'finished';
-  // Commit current partial input
-  if (S.curInput.trim()) commitWord();
-
-  const elapsed = (Date.now() - S.startTime) / 1000;
-  const cc = countCorrectChars();
-  const errs = countErrors();
-  const total = cc + errs;
-  const acc = total > 0 ? Math.round((cc/total)*100) : 100;
-  const wpm = calcWPM(cc, elapsed);
-  const consistency = calcConsistency(S.wpmTrack);
-
-  // Correct words count
-  let correctWords = 0, correctCharsTotal = 0;
-  for (let wi = 0; wi < S.curWord; wi++) {
-    const status = S.charStatus[wi] || {};
-    const word = S.words[wi];
-    const allOk = word.split('').every((ch, ci) => status[ci] === 'correct') && !Object.keys(status).some(k => +k >= word.length);
-    if (allOk) correctWords++;
-    Object.values(status).forEach(s => { if (s === 'correct') correctCharsTotal++; });
-  }
-
-  const result = {
-    wpm, accuracy: acc, errors: errs, correctWords,
-    correctChars: correctCharsTotal, time: Math.round(elapsed),
-    consistency, date: new Date().toLocaleDateString(),
-    wpmData: [...S.wpmTrack],
-    hardMode: S.hard, contentMode: S.contentMode,
-    testDuration: S.mode === 'time' ? S.timeLimit : 0
-  };
-
-  // Personal best
-  const isPB = wpm > S.pb;
-  if (isPB) S.pb = wpm;
-
-  // History
-  S.history.unshift(result);
-  if (S.history.length > 200) S.history.pop();
-
-  // Leaderboard
-  const existing = S.leaderboard.findIndex(e => e.name === S.playerName);
-  if (existing === -1 || S.leaderboard[existing].wpm < wpm) {
-    if (existing !== -1) S.leaderboard.splice(existing, 1);
-    S.leaderboard.push({ name: S.playerName, wpm, accuracy: acc, date: result.date });
-    S.leaderboard.sort((a,b) => b.wpm - a.wpm);
-    if (S.leaderboard.length > 20) S.leaderboard.length = 20;
-  }
-
-  // Achievements
-  const newAch = [];
-  ACHIEVEMENTS_DEF.forEach(a => {
-    if (!S.achievements.includes(a.id) && a.check(result, S.history)) {
-      S.achievements.push(a.id);
-      newAch.push(a);
-    }
-  });
-
-  saveData();
-  showResults(result, isPB, newAch);
-}
-
-// ============================================================
-// SHOW RESULTS
-// ============================================================
-function showResults(r, isPB, newAch) {
-  document.getElementById('words-wrap').style.display = 'none';
-  document.querySelector('.hint-bar').style.display = 'none';
-  document.getElementById('results-panel').style.display = 'block';
-  document.getElementById('pb-msg').style.display = isPB && r.wpm > 0 ? 'block' : 'none';
-
-  document.getElementById('r-wpm').textContent = r.wpm;
-  document.getElementById('r-acc').textContent = r.accuracy + '%';
-  document.getElementById('r-con').textContent = r.consistency + '%';
-  document.getElementById('r-err').textContent = r.errors;
-  document.getElementById('r-words').textContent = r.correctWords;
-  document.getElementById('r-chars').textContent = r.correctChars;
-  document.getElementById('r-time').textContent = r.time + 's';
-
-  // Achievement banner
-  if (newAch.length > 0) {
-    document.getElementById('new-ach-banner').style.display = 'flex';
-    document.getElementById('new-ach-names').textContent = newAch.map(a => a.icon+' '+a.title).join('  ');
-  } else {
-    document.getElementById('new-ach-banner').style.display = 'none';
-  }
-
-  // Chart
-  const ctx = document.getElementById('result-chart').getContext('2d');
-  if (resultChart) resultChart.destroy();
-  const labels = r.wpmData.map(d => d.t + 's');
-  const data = r.wpmData.map(d => d.wpm);
-  if (data.length < 2) {
-    document.querySelector('.chart-card').style.display = 'none';
-  } else {
-    document.querySelector('.chart-card').style.display = 'block';
-    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-    resultChart = new Chart(ctx, {
-      type: 'line',
-      data: { labels, datasets: [{ label: 'WPM', data, borderColor: accent, backgroundColor: accent+'22', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 }] },
-      options: {
-        responsive: true, maintainAspectRatio: true,
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.parsed.y + ' wpm' } } },
-        scales: {
-          x: { grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border').trim() }, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--sub').trim(), font: { size: 10 } } },
-          y: { grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border').trim() }, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--sub').trim(), font: { size: 10 } }, beginAtZero: true }
-        }
-      }
-    });
-  }
-}
-
-// ============================================================
-// STATS TAB
-// ============================================================
-function renderStats() {
-  const el = document.getElementById('stats-content');
-  if (S.history.length === 0) { el.innerHTML = '<div class="empty-state">No tests yet. Complete a test to see your stats!</div>'; return; }
-  const recent10 = S.history.slice(0,10);
-  const avgWpm = Math.round(recent10.reduce((a,b)=>a+b.wpm,0)/recent10.length);
-  const avgAcc = Math.round(recent10.reduce((a,b)=>a+b.accuracy,0)/recent10.length);
-  const bestAcc = Math.max(...S.history.map(h=>h.accuracy));
-  const totalWords = S.history.reduce((a,b)=>a+(b.correctWords||0),0);
-  el.innerHTML = `
-    <div class="stats-overview">
-      <div class="stats-card"><div class="val">${S.pb} <span style="font-size:16px">wpm</span></div><div class="lbl">Personal Best</div></div>
-      <div class="stats-card"><div class="val">${avgWpm} <span style="font-size:16px">wpm</span></div><div class="lbl">Avg WPM (last 10)</div></div>
-      <div class="stats-card"><div class="val">${avgAcc}%</div><div class="lbl">Avg Accuracy</div></div>
-      <div class="stats-card"><div class="val">${S.history.length}</div><div class="lbl">Tests Completed</div></div>
-      <div class="stats-card"><div class="val">${bestAcc}%</div><div class="lbl">Best Accuracy</div></div>
-      <div class="stats-card"><div class="val">${totalWords.toLocaleString()}</div><div class="lbl">Total Words Typed</div></div>
-    </div>
-    <div class="chart-card" style="margin-bottom:16px">
-      <div class="chart-title">Progress — last ${Math.min(S.history.length,20)} tests</div>
-      <canvas id="progress-chart" height="100"></canvas>
-    </div>
-    <div class="table-wrap">
-      <table class="history-table">
-        <thead><tr><th>#</th><th>WPM</th><th>Accuracy</th><th>Errors</th><th>Words</th><th>Consistency</th><th>Date</th></tr></thead>
-        <tbody>
-          ${S.history.slice(0,20).map((h,i)=>`
-            <tr>
-              <td style="color:var(--sub)">${i+1}</td>
-              <td style="color:var(--accent);font-family:'Bebas Neue';font-size:20px;letter-spacing:1px">${h.wpm}</td>
-              <td style="color:${h.accuracy>=95?'var(--correct)':'var(--text)'}">${h.accuracy}%</td>
-              <td style="color:${h.errors>0?'var(--wrong)':'var(--correct)'}">${h.errors}</td>
-              <td>${h.correctWords||0}</td>
-              <td style="color:var(--sub)">${h.consistency||0}%</td>
-              <td style="color:var(--sub)">${h.date}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-  // Progress chart
-  const recent = S.history.slice(0,20).reverse();
-  const pCtx = document.getElementById('progress-chart').getContext('2d');
-  if (progressChart) progressChart.destroy();
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-  const correct = getComputedStyle(document.documentElement).getPropertyValue('--correct').trim();
-  const sub = getComputedStyle(document.documentElement).getPropertyValue('--sub').trim();
-  const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim();
-  progressChart = new Chart(pCtx, {
-    type: 'line',
-    data: {
-      labels: recent.map((_,i)=>i+1),
-      datasets: [
-        { label:'WPM', data: recent.map(h=>h.wpm), borderColor:accent, backgroundColor:accent+'11', borderWidth:2, fill:true, tension:.4, pointRadius:3, pointBackgroundColor:accent },
-        { label:'Accuracy', data: recent.map(h=>h.accuracy), borderColor:correct, backgroundColor:'transparent', borderWidth:2, tension:.4, pointRadius:2, borderDash:[4,4] }
-      ]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:true,
-      plugins: { legend:{ labels:{ color:sub, font:{size:11}, boxWidth:20 } } },
-      scales: {
-        x:{ grid:{color:border}, ticks:{color:sub, font:{size:10}} },
-        y:{ grid:{color:border}, ticks:{color:sub, font:{size:10}}, beginAtZero:true }
-      }
-    }
-  });
-}
-
-// ============================================================
-// LEADERBOARD
-// ============================================================
-function renderLeaderboard() {
-  const el = document.getElementById('lb-content');
-  if (S.leaderboard.length === 0) { el.innerHTML = '<div class="empty-state">No scores yet. Complete a test to appear here!</div>'; return; }
-  const medals = ['🥇','🥈','🥉'];
-  const medalCls = ['medal-gold','medal-silver','medal-bronze'];
-  el.innerHTML = `
-    <div class="table-wrap">
-      <table class="lb-table">
-        <thead><tr><th>Rank</th><th>Player</th><th>WPM</th><th>Accuracy</th><th>Date</th></tr></thead>
-        <tbody>
-          ${S.leaderboard.map((e,i)=>`
-            <tr style="${e.name===S.playerName?'background:color-mix(in srgb,var(--accent) 6%,transparent)':''}">
-              <td><span class="rank-num ${medalCls[i]||''}">${medals[i]||'#'+(i+1)}</span></td>
-              <td style="font-weight:500${e.name===S.playerName?';color:var(--accent)':''}">${e.name}${e.name===S.playerName?' (you)':''}</td>
-              <td class="lb-wpm">${e.wpm}</td>
-              <td style="color:var(--sub)">${e.accuracy}%</td>
-              <td style="color:var(--sub)">${e.date}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-// ============================================================
-// ACHIEVEMENTS
-// ============================================================
-function renderAchievements() {
-  const unlocked = S.achievements.length;
-  document.getElementById('ach-progress').textContent = `${unlocked}/${ACHIEVEMENTS_DEF.length} unlocked`;
-  const grid = document.getElementById('ach-grid');
-  grid.innerHTML = ACHIEVEMENTS_DEF.map(a => {
-    const isUnlocked = S.achievements.includes(a.id);
-    return `
-      <div class="ach-card${isUnlocked?' unlocked':''}">
-        <div class="ach-icon">${a.icon}</div>
-        <div>
-          <div class="ach-title">${a.title}</div>
-          <div class="ach-desc">${a.desc}</div>
-        </div>
-        <div class="ach-check">✓</div>
+<!-- ════════════ SETTINGS ════════════ -->
+<div id="tab-set" class="panel">
+  <div class="sgrid">
+    <div class="srow">
+      <div class="slbl"><strong>Caret Style</strong>Cursor shape while typing</div>
+      <div class="sctrl" id="car-grp">
+        <button class="sbtn on" onclick="setCaret('line',this)">│ Line</button>
+        <button class="sbtn" onclick="setCaret('block',this)">█ Block</button>
+        <button class="sbtn" onclick="setCaret('under',this)">_ Under</button>
       </div>
-    `;
+    </div>
+    <div class="srow">
+      <div class="slbl"><strong>Sound Effects</strong>Audio feedback on keypress</div>
+      <div class="sctrl" id="snd-grp">
+        <button class="sbtn on" onclick="setSnd(true,this)">On</button>
+        <button class="sbtn" onclick="setSnd(false,this)">Off</button>
+      </div>
+    </div>
+    <div class="srow">
+      <div class="slbl"><strong>Theme</strong>Color scheme</div>
+      <div class="sctrl">
+        <div class="dots" id="set-dots">
+          <div class="dot" style="background:#e2b714" onclick="applyTheme('dark',this)" title="Dark"></div>
+          <div class="dot" style="background:#d97706" onclick="applyTheme('light',this)" title="Light"></div>
+          <div class="dot" style="background:#00ff41" onclick="applyTheme('hacker',this)" title="Hacker"></div>
+          <div class="dot" style="background:#bd93f9" onclick="applyTheme('dracula',this)" title="Dracula"></div>
+          <div class="dot" style="background:#00bfff" onclick="applyTheme('ocean',this)" title="Ocean"></div>
+        </div>
+      </div>
+    </div>
+    <div class="srow">
+      <div class="slbl"><strong>Reset All Data</strong>Clear history &amp; scores</div>
+      <div class="sctrl"><button class="sbtn" style="color:var(--err);border-color:var(--err)" onclick="resetAll()">Reset</button></div>
+    </div>
+  </div>
+  <div style="margin-top:14px;background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:18px">
+    <div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Keyboard Shortcuts</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px">
+      <div><kbd style="background:var(--sur2);border:1px solid var(--bor);padding:3px 8px;border-radius:4px;font-size:11px">Tab</kbd><span style="color:var(--sub);margin-left:8px">Restart test</span></div>
+      <div><kbd style="background:var(--sur2);border:1px solid var(--bor);padding:3px 8px;border-radius:4px;font-size:11px">Esc</kbd><span style="color:var(--sub);margin-left:8px">Reset test</span></div>
+      <div><kbd style="background:var(--sur2);border:1px solid var(--bor);padding:3px 8px;border-radius:4px;font-size:11px">Space</kbd><span style="color:var(--sub);margin-left:8px">Next word</span></div>
+      <div><kbd style="background:var(--sur2);border:1px solid var(--bor);padding:3px 8px;border-radius:4px;font-size:11px">Backspace</kbd><span style="color:var(--sub);margin-left:8px">Delete (blocked in hard mode)</span></div>
+    </div>
+  </div>
+</div>
+
+</main>
+<script>
+// ═══════════════════════════════════════════════
+// WORD DATA
+// ═══════════════════════════════════════════════
+const WL={
+  easy:['the','be','to','of','and','a','in','that','have','it','for','not','on','with','he','as','you','do','at','this','but','his','by','from','they','we','say','her','she','or','an','will','my','one','all','would','there','their','what','so','up','out','if','about','who','get','which','go','me','when','make','can','like','time','no','just','him','know','take','people','into','year','your','good','some','could','them','see','other','than','then','now','look','only','come','its','over','think','also','back','after','use','two','how','our','work','first','well','way','even','new','want','any','give','day','most','us','great','home','hand','play','here','try','why','land','air','away'],
+  medium:['about','above','across','action','actually','agree','already','always','another','answer','around','because','become','before','between','building','certain','change','children','coming','company','complete','consider','continue','control','countries','create','decided','develop','different','direct','during','either','enough','every','example','experience','family','finally','following','found','further','given','going','government','great','group','having','helps','however','human','important','include','including','increase','interest','involved','itself','known','large','later','learn','leave','level','likely','local','longer','making','matter','might','money','month','move','national','never','number','often','order','outside','own','part','people','place','plan','point','possible','power','program','provide','public','question','rather','real','reason','recent','result','right','school','second','since','small','social','something','sometimes','still','story','study','system','taken','through','together','toward','true','under','until','usually','various','water','where','which','while','whole','within','without','world','write','young','along','better','called','cause','city','close','done','draw','early','face','fact','feel','form','free','full','gave','hold','hour','idea','keep','knew','last','left','life','light','line','live','made','main','name','near','need','next','night','once','open','past','room','same','seem','set','show','side','simple','song','soon','state','stay','stop','sure','talk','watch'],
+  hard:['accommodate','ambiguous','anomaly','apparatus','arbitrary','articulate','assassination','asterisk','bureaucratic','camouflage','catastrophic','circumference','clandestine','coincidence','commemorate','conscientious','controversial','crystallize','deteriorate','dilapidated','disappearance','disintegrate','ecclesiastical','embarrassment','exaggeration','exhilaration','extraordinary','facetious','fascinating','flabbergasted','gregarious','hallucination','hypocritical','idiosyncratic','illegitimate','incorrigible','indispensable','infrastructure','ingenious','instantaneous','juxtaposition','kaleidoscope','labyrinthine','magnificent','manipulative','metamorphosis','miscellaneous','mysterious','nonchalant','oblivious','omniscient','overwhelm','paradoxical','perseverance','phenomenon','photosynthesis','physiological','precarious','predominantly','psychologically','questionnaire','quintessential','reverberate','revolutionary','rigorous','scrupulous','silhouette','simultaneous','sophisticated','spontaneous','strenuous','subterranean','supernatural','surveillance','suspicious','synonymous','technological','tempestuous','theoretical','treacherous','unbelievable','undeniable','unnecessary','unprecedented','vaccination','vengeance','vulnerable','whimsical','zealousness']
+};
+const QUOTES=['The only way to do great work is to love what you do. If you have not found it yet keep looking and do not settle.','In the middle of every difficulty lies opportunity. Success is not final failure is not fatal it is the courage to continue that counts.','It does not matter how slowly you go as long as you do not stop. Our greatest glory is not in never falling but in rising every time we fall.','The future belongs to those who believe in the beauty of their dreams. Do not watch the clock do what it does and keep going.','Believe you can and you are halfway there. Whether you think you can or you cannot you are right. The secret of getting ahead is getting started.','Two roads diverged in a wood and I took the one less traveled by and that has made all the difference in the world.','I have not failed I have just found ten thousand ways that will not work. The secret of success is to know something nobody else knows.','Life is what happens when you are busy making other plans. In three words I can sum up everything I have learned about life it goes on.'];
+const CSNIP=['function fibonacci(n) { if (n <= 1) return n; return fibonacci(n - 1) + fibonacci(n - 2); }','const arr = [1, 2, 3]; const sum = arr.reduce((acc, val) => acc + val, 0); console.log(sum);','class Stack { constructor() { this.items = []; } push(item) { this.items.push(item); } pop() { return this.items.pop(); } }','async function getData(url) { const res = await fetch(url); const data = await res.json(); return data; }','const sorted = arr.sort((a, b) => a - b); const idx = sorted.findIndex(x => x === target);','import { useState } from "react"; export default function Counter() { const [n, setN] = useState(0); return <button onClick={()=>setN(n+1)}>{n}</button>; }'];
+const FLOW={
+  animals:['lion','tiger','elephant','giraffe','penguin','dolphin','eagle','cheetah','koala','panda','wolf','fox','bear','owl','parrot','crocodile','flamingo','zebra','rhinoceros','jaguar','leopard','gorilla','kangaroo','tortoise','peacock','cobra','falcon','pelican','mongoose','iguana','octopus','walrus','platypus','narwhal','meerkat','seahorse'],
+  names:['Alice','Bob','Carlos','Diana','Emma','Felix','Grace','Henry','Iris','James','Kate','Liam','Maya','Noah','Olivia','Peter','Quinn','Ruby','Sam','Tara','Uma','Victor','Wendy','Xander','Yasmine','Zane','Arjun','Priya','Ravi','Neha','Aarav','Kavya','Rohan','Ananya','Ishaan'],
+  countries:['India','Brazil','Japan','France','Germany','Canada','Mexico','Italy','Spain','China','Russia','Egypt','Kenya','Peru','Greece','Turkey','Sweden','Poland','Norway','Chile','Argentina','Portugal','Netherlands','Belgium','Switzerland','Austria','Denmark','Finland','Hungary','Romania'],
+  colors:['crimson','azure','emerald','violet','amber','ivory','scarlet','cobalt','magenta','teal','ochre','lavender','coral','indigo','bronze','turquoise','maroon','jade','chartreuse','vermilion','cerulean','sienna','fuchsia','mauve','periwinkle','tangerine','lilac'],
+  fruits:['mango','apple','banana','strawberry','peach','grape','cherry','papaya','lychee','guava','kiwi','melon','pear','plum','apricot','coconut','blueberry','raspberry','watermelon','pineapple','pomegranate','jackfruit','dragonfruit','fig','persimmon','starfruit','durian'],
+  cities:['Tokyo','Paris','London','Mumbai','Berlin','Sydney','Dubai','Cairo','Rome','Seoul','Bangkok','Istanbul','Lagos','Toronto','Madrid','Vienna','Prague','Amsterdam','Singapore','Buenos Aires','Nairobi','Athens','Warsaw','Budapest','Lisbon','Oslo','Copenhagen','Helsinki'],
+  numbers:['one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety','hundred']
+};
+const ACHS=[
+  {id:'w50',ico:'⚡',title:'Speed Demon',desc:'Reach 50 WPM',chk:(r)=>r.wpm>=50},
+  {id:'w75',ico:'🚀',title:'Rocket Fingers',desc:'Reach 75 WPM',chk:(r)=>r.wpm>=75},
+  {id:'w100',ico:'💯',title:'100 WPM Club',desc:'Reach 100 WPM',chk:(r)=>r.wpm>=100},
+  {id:'w120',ico:'🔥',title:'Blazing Keys',desc:'Reach 120 WPM',chk:(r)=>r.wpm>=120},
+  {id:'a100',ico:'🎯',title:'Perfectionist',desc:'100% Accuracy',chk:(r)=>r.accuracy===100},
+  {id:'a95',ico:'✨',title:'Sharpshooter',desc:'95%+ Accuracy',chk:(r)=>r.accuracy>=95},
+  {id:'e0',ico:'🌟',title:'Zero Mistakes',desc:'Finish with 0 errors',chk:(r)=>r.errors===0},
+  {id:'t5',ico:'🏅',title:'Warming Up',desc:'Complete 5 tests',chk:(r,h)=>h.length>=5},
+  {id:'t10',ico:'🏆',title:'Dedicated',desc:'Complete 10 tests',chk:(r,h)=>h.length>=10},
+  {id:'t50',ico:'👑',title:'Master Typist',desc:'Complete 50 tests',chk:(r,h)=>h.length>=50},
+  {id:'con90',ico:'📈',title:'Consistent',desc:'90%+ Consistency score',chk:(r)=>r.consistency>=90},
+  {id:'hm',ico:'⚠️',title:'Masochist',desc:'Complete a Hard mode test',chk:(r)=>r.hardMode===true},
+  {id:'code',ico:'💻',title:'Code Monkey',desc:'Complete a code test',chk:(r)=>r.cont==='code'},
+  {id:'flow',ico:'🌊',title:'Flow State',desc:'Complete a Flow mode test',chk:(r)=>r.cont==='flow'}
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+const G={
+  mode:'time',tl:60,wc:50,diff:'medium',cont:'words',
+  pun:false,num:false,hard:false,sound:true,caret:'line',
+  words:[],cst:[],ci:0,inp:'',ts:'idle',
+  t0:null,tleft:60,ticker:null,lticker:null,wtrack:[],
+  fcat:'animals',fq:[],fidx:0,finp:'',ftyped:0,ferr:0,
+  hist:[],achs:[],lb:[],pb:0,name:'Player'
+};
+
+// ═══════════════════════════════════════════════
+// AUDIO
+// ═══════════════════════════════════════════════
+let AC=null;
+function getAC(){if(!AC)try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}return AC;}
+function beep(type){
+  if(!G.sound)return;
+  const c=getAC();if(!c)return;
+  const o=c.createOscillator(),g=c.createGain();
+  o.connect(g);g.connect(c.destination);
+  if(type==='err'){o.type='sawtooth';o.frequency.value=160;g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.12);}
+  else if(type==='spc'){o.type='sine';o.frequency.setValueAtTime(600,c.currentTime);o.frequency.exponentialRampToValueAtTime(300,c.currentTime+.07);g.gain.setValueAtTime(.06,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.07);}
+  else{o.type='square';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.exponentialRampToValueAtTime(440,c.currentTime+.04);g.gain.setValueAtTime(.04,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.04);}
+  o.start(c.currentTime);o.stop(c.currentTime+.15);
+}
+
+// ═══════════════════════════════════════════════
+// STORAGE
+// ═══════════════════════════════════════════════
+function save(){
+  try{
+    localStorage.setItem('sk_h',JSON.stringify(G.hist));
+    localStorage.setItem('sk_a',JSON.stringify(G.achs));
+    localStorage.setItem('sk_l',JSON.stringify(G.lb));
+    localStorage.setItem('sk_pb',G.pb);
+    localStorage.setItem('sk_n',G.name);
+    localStorage.setItem('sk_th',document.body.className||'');
+    localStorage.setItem('sk_cr',G.caret);
+    localStorage.setItem('sk_sn',G.sound);
+  }catch(e){}
+}
+function load(){
+  try{
+    G.hist=JSON.parse(localStorage.getItem('sk_h')||'[]');
+    G.achs=JSON.parse(localStorage.getItem('sk_a')||'[]');
+    G.lb=JSON.parse(localStorage.getItem('sk_l')||'[]');
+    G.pb=+localStorage.getItem('sk_pb')||0;
+    G.name=localStorage.getItem('sk_n')||'Player';
+    document.getElementById('lbname').value=G.name;
+    const th=localStorage.getItem('sk_th');if(th!==null)_applyTheme(th);
+    const cr=localStorage.getItem('sk_cr');if(cr)G.caret=cr;
+    const sn=localStorage.getItem('sk_sn');if(sn!==null)G.sound=(sn==='true');
+  }catch(e){}
+}
+function resetAll(){if(!confirm('Reset all data?'))return;G.hist=[];G.achs=[];G.lb=[];G.pb=0;save();renderStats();renderLB();renderAchs();alert('Done!');}
+function saveName(){G.name=document.getElementById('lbname').value||'Player';save();}
+
+// ═══════════════════════════════════════════════
+// GENERATE WORDS
+// ═══════════════════════════════════════════════
+function genWords(){
+  if(G.cont==='quotes')return QUOTES[Math.floor(Math.random()*QUOTES.length)].split(' ');
+  if(G.cont==='code')return CSNIP[Math.floor(Math.random()*CSNIP.length)].split(' ');
+  const list=WL[G.diff];const n=G.mode==='time'?250:G.wc;
+  const out=[];
+  for(let i=0;i<n;i++){
+    let w=list[Math.floor(Math.random()*list.length)];
+    if(G.num&&Math.random()<.15)w=''+Math.floor(Math.random()*999+1);
+    if(G.pun&&Math.random()<.2)w+=['.', ',', '!', '?'][Math.floor(Math.random()*4)];
+    out.push(w);
+  }
+  return out;
+}
+
+// ═══════════════════════════════════════════════
+// RENDER WORD BOX
+// ═══════════════════════════════════════════════
+function renderWords(){
+  const con=document.getElementById('wcon');con.innerHTML='';
+  G.words.forEach((w,wi)=>{
+    const el=document.createElement('span');
+    el.className='w'+(wi===G.ci?' cur':'');
+    el.id='w'+wi;
+    w.split('').forEach((ch,ci)=>{
+      const s=document.createElement('span');
+      s.className='ch';s.id='c'+wi+'_'+ci;s.textContent=ch;
+      el.appendChild(s);
+    });
+    con.appendChild(el);
+  });
+  placeCaret();
+}
+
+function updWord(wi){
+  const w=G.words[wi];const st=G.cst[wi]||{};
+  const el=document.getElementById('w'+wi);if(!el)return;
+  el.querySelectorAll('.ch:not(.ex)').forEach(c=>{
+    const ci=parseInt(c.id.split('_')[1]);
+    const v=st[ci];
+    c.className='ch'+(v==='ok'?' ok':v==='bad'?' bad':'');
+  });
+  el.querySelectorAll('.ex').forEach(e=>e.remove());
+  Object.keys(st).filter(k=>+k>=w.length).forEach(k=>{
+    const s=document.createElement('span');
+    s.className='ch ex';s.textContent=G.inp[+k]||'';el.appendChild(s);
+  });
+}
+
+// KEY FUNCTION: caret is a plain inline flex child, NO position:absolute
+function placeCaret(){
+  document.querySelectorAll('.cr').forEach(c=>c.remove());
+  const wEl=document.getElementById('w'+G.ci);if(!wEl)return;
+  const pos=G.inp.length;
+  const chars=wEl.querySelectorAll('.ch:not(.ex)');
+  const cr=document.createElement('span');
+  cr.className='cr';
+  if(G.caret==='line'){
+    cr.style.cssText='width:2px;height:1.2em;background:var(--cur);border-radius:1px;';
+  }else if(G.caret==='block'){
+    cr.style.cssText='width:.6ch;height:1.2em;background:color-mix(in srgb,var(--cur) 42%,transparent);border-radius:2px;';
+  }else{
+    cr.style.cssText='width:.6ch;height:2px;background:var(--cur);align-self:flex-end;margin-bottom:1px;';
+  }
+  if(pos<chars.length)wEl.insertBefore(cr,chars[pos]);
+  else wEl.appendChild(cr);
+}
+
+function scrollBox(){
+  const box=document.getElementById('wbox');
+  const wEl=document.getElementById('w'+G.ci);
+  if(!box||!wEl)return;
+  if(wEl.offsetTop>box.scrollTop+box.clientHeight*.5)
+    box.scrollTop=wEl.offsetTop-box.clientHeight*.3;
+}
+
+// ═══════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════
+function boot(){
+  clearInterval(G.ticker);clearInterval(G.lticker);
+  G.ts='idle';G.t0=null;G.tleft=G.tl;G.wtrack=[];G.ci=0;G.inp='';
+  document.getElementById('hi').value='';
+  document.getElementById('res').style.display='none';
+
+  const isFlow=G.cont==='flow';
+  document.getElementById('wbox').style.display=isFlow?'none':'block';
+  document.getElementById('nhint').style.display=isFlow?'none':'';
+  document.getElementById('fwrap').style.display=isFlow?'block':'none';
+  document.getElementById('lstats').style.display='';
+
+  const tDisp=G.mode==='time'?G.tl:(isFlow?`0/${G.wc}`:`0/${G.wc}`);
+  document.getElementById('lv-t').textContent=G.mode==='time'?G.tl:(isFlow?`0/${G.wc}`:'0');
+  document.getElementById('lv-tl').textContent=G.mode==='time'?'time':'words';
+  document.getElementById('lv-w').textContent='0';
+  document.getElementById('lv-a').textContent='100%';
+  document.getElementById('lv-e').textContent='0';
+
+  if(isFlow){bootFlow();}
+  else{
+    G.words=genWords();G.cst=G.words.map(()=>({}));
+    renderWords();document.getElementById('wbox').scrollTop=0;
+  }
+  focusHI();
+}
+function focusHI(){document.getElementById('hi').focus({preventScroll:true});}
+
+// ═══════════════════════════════════════════════
+// INPUT
+// ═══════════════════════════════════════════════
+function onKD(e){
+  if(e.key==='Tab'){e.preventDefault();boot();return;}
+  if(e.key==='Escape'){boot();return;}
+  document.getElementById('capswarn').style.display=e.getModifierState('CapsLock')?'block':'none';
+}
+
+function onInput(e){
+  if(G.ts==='finished')return;
+  const val=e.target.value;
+  if(G.cont==='flow'){handleFlow(val,e);return;}
+
+  if(G.ts==='idle'){G.ts='running';G.t0=Date.now();startTicks();}
+
+  if(val.endsWith(' ')){
+    if(G.inp.trim()===''){e.target.value='';return;}
+    commitWord();e.target.value='';return;
+  }
+  if(G.hard&&val.length<G.inp.length){e.target.value=G.inp;return;}
+
+  const prev=G.inp.length;
+  G.inp=val;
+  const wd=G.words[G.ci];const st={};
+  for(let i=0;i<Math.max(val.length,wd.length);i++){
+    if(i<val.length&&i<wd.length)st[i]=val[i]===wd[i]?'ok':'bad';
+    else if(i<val.length)st[i]='ex';
+  }
+  G.cst[G.ci]=st;updWord(G.ci);placeCaret();
+  if(val.length>prev){
+    const li=val.length-1;beep(li<wd.length&&val[li]===wd[li]?'key':'err');
+  }
+}
+
+function commitWord(){
+  const wd=G.words[G.ci];const val=G.inp;const st={};
+  for(let i=0;i<Math.max(val.length,wd.length);i++){
+    if(i<val.length&&i<wd.length)st[i]=val[i]===wd[i]?'ok':'bad';
+    else if(i<val.length)st[i]='ex';else st[i]='miss';
+  }
+  G.cst[G.ci]=st;updWord(G.ci);
+  document.getElementById('w'+G.ci)?.classList.remove('cur');
+  beep('spc');G.ci++;G.inp='';
+  if(G.mode==='words'&&G.ci>=G.wc){finishTest();return;}
+  document.getElementById('w'+G.ci)?.classList.add('cur');
+  placeCaret();scrollBox();liveTick();
+  if(G.mode==='words')document.getElementById('lv-t').textContent=`${G.ci}/${G.wc}`;
+}
+
+// ═══════════════════════════════════════════════
+// TICKS
+// ═══════════════════════════════════════════════
+function startTicks(){
+  if(G.mode==='time'){
+    G.ticker=setInterval(()=>{
+      G.tleft--;
+      document.getElementById('lv-t').textContent=G.tleft;
+      const el=(Date.now()-G.t0)/1000;
+      G.wtrack.push({t:Math.round(el),wpm:calcWPM(ccChars(),el)});
+      if(G.tleft<=0){G.cont==='flow'?finishFlow():finishTest();}
+    },1000);
+  }
+  G.lticker=setInterval(liveTick,500);
+}
+
+function liveTick(){
+  if(!G.t0)return;
+  if(G.cont==='flow'){liveFlowTick();return;}
+  const el=(Date.now()-G.t0)/1000,cc=ccChars(),er=errChars(),tot=cc+er;
+  const acc=tot>0?Math.round(cc/tot*100):100;
+  document.getElementById('lv-w').textContent=calcWPM(cc,el);
+  document.getElementById('lv-a').textContent=acc+'%';
+  document.getElementById('lv-e').textContent=er;
+  if(G.mode==='words')document.getElementById('lv-t').textContent=`${G.ci}/${G.wc}`;
+}
+
+function ccChars(){let c=0;for(let i=0;i<G.ci;i++){const st=G.cst[i]||{};Object.values(st).forEach(v=>{if(v==='ok')c++;});}return c;}
+function errChars(){let e=0;for(let i=0;i<=G.ci;i++){const st=G.cst[i]||{};Object.values(st).forEach(v=>{if(v==='bad'||v==='ex')e++;});}return e;}
+function calcWPM(cc,sec){return sec<0.5?0:Math.round(cc/5/(sec/60));}
+function calcCon(data){
+  if(data.length<2)return 100;
+  const vs=data.map(d=>d.wpm).filter(v=>v>0);if(vs.length<2)return 100;
+  const mn=vs.reduce((a,b)=>a+b,0)/vs.length;
+  const va=vs.reduce((a,b)=>a+Math.pow(b-mn,2),0)/vs.length;
+  return Math.max(0,Math.round(100-(mn>0?Math.sqrt(va)/mn*100:0)));
+}
+
+// ═══════════════════════════════════════════════
+// FINISH
+// ═══════════════════════════════════════════════
+let _rc=null;
+function finishTest(){
+  clearInterval(G.ticker);clearInterval(G.lticker);G.ts='finished';
+  if(G.inp.trim())commitWord();
+  const el=(Date.now()-G.t0)/1000,cc=ccChars(),er=errChars(),tot=cc+er;
+  const acc=tot>0?Math.round(cc/tot*100):100,w=calcWPM(cc,el),con=calcCon(G.wtrack);
+  let cw=0,cch=0;
+  for(let i=0;i<G.ci;i++){
+    const st=G.cst[i]||{},wd=G.words[i];
+    if(wd.split('').every((_,ci)=>st[ci]==='ok')&&!Object.keys(st).some(k=>+k>=wd.length))cw++;
+    Object.values(st).forEach(v=>{if(v==='ok')cch++;});
+  }
+  doFinish({wpm:w,accuracy:acc,errors:er,correctWords:cw,correctChars:cch,time:Math.round(el),consistency:con,date:new Date().toLocaleDateString(),wpmData:[...G.wtrack],hardMode:G.hard,cont:G.cont,dur:G.mode==='time'?G.tl:0});
+}
+
+function doFinish(r){
+  const isPB=r.wpm>G.pb;if(isPB)G.pb=r.wpm;
+  G.hist.unshift(r);if(G.hist.length>200)G.hist.pop();
+  const xi=G.lb.findIndex(e=>e.name===G.name);
+  if(xi===-1||G.lb[xi].wpm<r.wpm){
+    if(xi!==-1)G.lb.splice(xi,1);
+    G.lb.push({name:G.name,wpm:r.wpm,accuracy:r.accuracy,date:r.date});
+    G.lb.sort((a,b)=>b.wpm-a.wpm);if(G.lb.length>20)G.lb.length=20;
+  }
+  const newA=[];ACHS.forEach(a=>{if(!G.achs.includes(a.id)&&a.chk(r,G.hist)){G.achs.push(a.id);newA.push(a);}});
+  save();showRes(r,isPB,newA);
+}
+
+function showRes(r,isPB,newA){
+  document.getElementById('wbox').style.display='none';
+  document.getElementById('fwrap').style.display='none';
+  document.getElementById('nhint').style.display='none';
+  document.getElementById('res').style.display='block';
+  document.getElementById('pbmsg').style.display=isPB&&r.wpm>0?'block':'none';
+  document.getElementById('r-wpm').textContent=r.wpm;
+  document.getElementById('r-acc').textContent=r.accuracy+'%';
+  document.getElementById('r-con').textContent=r.consistency+'%';
+  document.getElementById('r-err').textContent=r.errors;
+  document.getElementById('r-wds').textContent=r.correctWords;
+  document.getElementById('r-chs').textContent=r.correctChars;
+  document.getElementById('r-tim').textContent=r.time+'s';
+  if(newA.length){document.getElementById('achban').style.display='flex';document.getElementById('achnms').textContent=newA.map(a=>a.ico+' '+a.title).join('  ');}
+  else document.getElementById('achban').style.display='none';
+  if(_rc)_rc.destroy();
+  if(r.wpmData&&r.wpmData.length>1){
+    document.getElementById('chart-wrap').style.display='block';
+    const acc=gv('--acc'),bor=gv('--bor'),sub=gv('--sub');
+    _rc=new Chart(document.getElementById('rc-chart').getContext('2d'),{type:'line',data:{labels:r.wpmData.map(d=>d.t+'s'),datasets:[{label:'WPM',data:r.wpmData.map(d=>d.wpm),borderColor:acc,backgroundColor:acc+'22',borderWidth:2,fill:true,tension:.4,pointRadius:0}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:{color:bor},ticks:{color:sub,font:{size:10}}},y:{grid:{color:bor},ticks:{color:sub,font:{size:10}},beginAtZero:true}}}});
+  }else document.getElementById('chart-wrap').style.display='none';
+}
+function gv(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+// ═══════════════════════════════════════════════
+// FLOW MODE
+// ═══════════════════════════════════════════════
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function bootFlow(){
+  G.fq=shuffle([...FLOW[G.fcat]]);
+  while(G.fq.length<80)G.fq.push(...shuffle([...FLOW[G.fcat]]));
+  G.fidx=0;G.finp='';G.ftyped=0;G.ferr=0;
+  G.ts='idle';G.t0=null;G.tleft=G.tl;G.wtrack=[];
+  buildFTrack();drawFOv();
+  if(G.mode==='words')document.getElementById('lv-t').textContent=`0/${G.wc}`;
+}
+
+function buildFTrack(){
+  const tr=document.getElementById('ftrack');
+  tr.innerHTML='';tr.style.transform='translateY(50px)';
+  for(let i=0;i<Math.min(20,G.fq.length);i++){
+    const sl=document.createElement('div');sl.className='fslot';sl.id='fs'+i;
+    const wd=document.createElement('div');wd.className='fword';wd.textContent=G.fq[i]||'';
+    sl.appendChild(wd);tr.appendChild(sl);
+  }
+  styleFSlots();
+}
+
+function styleFSlots(){
+  for(let i=0;i<20;i++){
+    const sl=document.getElementById('fs'+i);if(!sl)continue;
+    const wd=sl.querySelector('.fword');const d=i-G.fidx;
+    if(d===0){wd.style.fontSize='0';wd.style.opacity='0';}
+    else if(d===1){wd.style.fontSize='1.5rem';wd.style.opacity='.7';wd.style.color='var(--sub)';}
+    else if(d===2){wd.style.fontSize='1.1rem';wd.style.opacity='.4';wd.style.color='var(--bor)';}
+    else if(d===-1){wd.style.fontSize='1.2rem';wd.style.opacity='.5';wd.style.color='var(--sub)';}
+    else if(d===-2){wd.style.fontSize='.9rem';wd.style.opacity='.2';wd.style.color='var(--bor)';}
+    else{wd.style.opacity='0';}
+  }
+}
+
+function drawFOv(){
+  const ov=document.getElementById('fov');ov.innerHTML='';
+  const word=G.fq[G.fidx]||'';
+  word.split('').forEach((ch,i)=>{
+    const s=document.createElement('span');s.className='fc';s.textContent=ch;
+    if(i<G.finp.length)s.classList.add(G.finp[i]===ch?'fo':'fb');else s.classList.add('fp');
+    ov.appendChild(s);
+  });
+  for(let i=word.length;i<G.finp.length;i++){
+    const s=document.createElement('span');s.className='fc fb';s.textContent=G.finp[i];ov.appendChild(s);
+  }
+  const cr=document.createElement('span');cr.className='fcaret';ov.appendChild(cr);
+}
+
+function handleFlow(val,e){
+  if(val.endsWith(' ')){if(G.finp.trim()!=='')flowNext();e.target.value='';return;}
+  if(G.hard&&val.length<G.finp.length){e.target.value=G.finp;return;}
+  if(G.ts==='idle'){G.ts='running';G.t0=Date.now();startTicks();}
+  const prev=G.finp.length;G.finp=val;drawFOv();
+  if(val.length>prev){const li=val.length-1;const wd=G.fq[G.fidx]||'';beep(li<wd.length&&val[li]===wd[li]?'key':'err');}
+  liveFlowTick();
+}
+
+function liveFlowTick(){
+  if(!G.t0)return;
+  const el=(Date.now()-G.t0)/1000,est=Math.max(0,G.ftyped*5-G.ferr);
+  const acc=G.ftyped>0?Math.max(0,Math.round(est/(G.ftyped*5)*100)):100;
+  document.getElementById('lv-w').textContent=Math.max(0,calcWPM(est,el));
+  document.getElementById('lv-a').textContent=acc+'%';
+  document.getElementById('lv-e').textContent=G.ferr;
+  if(G.mode==='words')document.getElementById('lv-t').textContent=`${G.ftyped}/${G.wc}`;
+}
+
+function flowNext(){
+  const word=G.fq[G.fidx]||'';let er=0;
+  for(let i=0;i<Math.max(G.finp.length,word.length);i++){if(G.finp[i]!==word[i])er++;}
+  G.ferr+=er;G.ftyped++;beep('spc');G.fidx++;G.finp='';
+  if(G.fidx+12>=G.fq.length)G.fq.push(...shuffle([...FLOW[G.fcat]]));
+  const tr=document.getElementById('ftrack');
+  while(tr.children.length<G.fidx+18){
+    const i=tr.children.length;
+    const sl=document.createElement('div');sl.className='fslot';sl.id='fs'+i;
+    const wd=document.createElement('div');wd.className='fword';wd.textContent=G.fq[i]||'';
+    sl.appendChild(wd);tr.appendChild(sl);
+  }
+  for(let i=G.fidx;i<Math.min(G.fidx+15,G.fq.length);i++){
+    const sl=document.getElementById('fs'+i);
+    if(sl){const wd=sl.querySelector('.fword');if(wd)wd.textContent=G.fq[i]||'';}
+  }
+  tr.style.transform=`translateY(${50-G.fidx*80}px)`;
+  styleFSlots();drawFOv();liveFlowTick();
+  if(G.mode==='words'&&G.ftyped>=G.wc)finishFlow();
+}
+
+function finishFlow(){
+  clearInterval(G.ticker);clearInterval(G.lticker);G.ts='finished';
+  const el=(Date.now()-G.t0)/1000,est=Math.max(0,G.ftyped*5-G.ferr);
+  const w=calcWPM(est,el),acc=G.ftyped>0?Math.max(0,Math.round(est/(G.ftyped*5)*100)):100;
+  doFinish({wpm:w,accuracy:acc,errors:G.ferr,correctWords:G.ftyped,correctChars:est,time:Math.round(el),consistency:85,date:new Date().toLocaleDateString(),wpmData:[...G.wtrack],hardMode:G.hard,cont:'flow',dur:G.mode==='time'?G.tl:0});
+}
+
+// ═══════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════
+let _pc=null;
+function renderStats(){
+  const el=document.getElementById('statscon');
+  if(!G.hist.length){el.innerHTML='<div class="empty">No tests yet. Complete a test to see your stats!</div>';return;}
+  const r10=G.hist.slice(0,10);
+  const avgW=Math.round(r10.reduce((a,b)=>a+b.wpm,0)/r10.length);
+  const avgA=Math.round(r10.reduce((a,b)=>a+b.accuracy,0)/r10.length);
+  const bestA=Math.max(...G.hist.map(h=>h.accuracy));
+  const totW=G.hist.reduce((a,b)=>a+(b.correctWords||0),0);
+  el.innerHTML=`
+    <div class="sov">
+      <div class="sc"><div class="v">${G.pb} <span style="font-size:16px">wpm</span></div><div class="l">Personal Best</div></div>
+      <div class="sc"><div class="v">${avgW} <span style="font-size:16px">wpm</span></div><div class="l">Avg WPM (last 10)</div></div>
+      <div class="sc"><div class="v">${avgA}%</div><div class="l">Avg Accuracy</div></div>
+      <div class="sc"><div class="v">${G.hist.length}</div><div class="l">Tests Completed</div></div>
+      <div class="sc"><div class="v">${bestA}%</div><div class="l">Best Accuracy</div></div>
+      <div class="sc"><div class="v">${totW.toLocaleString()}</div><div class="l">Total Words Typed</div></div>
+    </div>
+    <div class="cc" style="margin-bottom:16px"><div class="ctit">Progress — last ${Math.min(G.hist.length,20)} tests</div><canvas id="pchart" height="100"></canvas></div>
+    <div class="twrap"><table class="htbl"><thead><tr><th>#</th><th>WPM</th><th>Acc</th><th>Errors</th><th>Words</th><th>Con</th><th>Date</th></tr></thead>
+    <tbody>${G.hist.slice(0,20).map((h,i)=>`<tr>
+      <td style="color:var(--sub)">${i+1}</td>
+      <td style="color:var(--acc);font-family:'Bebas Neue';font-size:20px">${h.wpm}</td>
+      <td style="color:${h.accuracy>=95?'var(--ok)':'var(--txt)'}">${h.accuracy}%</td>
+      <td style="color:${h.errors>0?'var(--err)':'var(--ok)'}">${h.errors}</td>
+      <td>${h.correctWords||0}</td>
+      <td style="color:var(--sub)">${h.consistency||0}%</td>
+      <td style="color:var(--sub)">${h.date}</td>
+    </tr>`).join('')}</tbody></table></div>`;
+  if(_pc)_pc.destroy();
+  const rec=G.hist.slice(0,20).reverse();
+  const acc=gv('--acc'),ok=gv('--ok'),sub=gv('--sub'),bor=gv('--bor');
+  _pc=new Chart(document.getElementById('pchart').getContext('2d'),{type:'line',data:{labels:rec.map((_,i)=>i+1),datasets:[{label:'WPM',data:rec.map(h=>h.wpm),borderColor:acc,backgroundColor:acc+'11',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:acc},{label:'Acc',data:rec.map(h=>h.accuracy),borderColor:ok,backgroundColor:'transparent',borderWidth:2,tension:.4,pointRadius:2,borderDash:[4,4]}]},options:{responsive:true,plugins:{legend:{labels:{color:sub,font:{size:11},boxWidth:18}}},scales:{x:{grid:{color:bor},ticks:{color:sub,font:{size:10}}},y:{grid:{color:bor},ticks:{color:sub,font:{size:10}},beginAtZero:true}}}});
+}
+
+// ═══════════════════════════════════════════════
+// LEADERBOARD
+// ═══════════════════════════════════════════════
+function renderLB(){
+  const el=document.getElementById('lbcon');
+  if(!G.lb.length){el.innerHTML='<div class="empty">No scores yet!</div>';return;}
+  const med=['🥇','🥈','🥉'];
+  el.innerHTML=`<div class="twrap"><table class="lbtbl"><thead><tr><th>Rank</th><th>Player</th><th>WPM</th><th>Accuracy</th><th>Date</th></tr></thead>
+  <tbody>${G.lb.map((e,i)=>`<tr style="${e.name===G.name?'background:color-mix(in srgb,var(--acc) 6%,transparent)':''}">
+    <td style="font-size:20px;font-weight:700;color:${i===0?'#ffd700':i===1?'#c0c0c0':i===2?'#cd7f32':'var(--sub)'}">${med[i]||'#'+(i+1)}</td>
+    <td style="font-weight:500${e.name===G.name?';color:var(--acc)':''}">${e.name}${e.name===G.name?' (you)':''}</td>
+    <td class="lbwpm">${e.wpm}</td>
+    <td style="color:var(--sub)">${e.accuracy}%</td>
+    <td style="color:var(--sub)">${e.date}</td>
+  </tr>`).join('')}</tbody></table></div>`;
+}
+
+// ═══════════════════════════════════════════════
+// ACHIEVEMENTS
+// ═══════════════════════════════════════════════
+function renderAchs(){
+  document.getElementById('aprog').textContent=`${G.achs.length}/${ACHS.length} unlocked`;
+  document.getElementById('agrid').innerHTML=ACHS.map(a=>{
+    const on=G.achs.includes(a.id);
+    return`<div class="acard${on?' on':''}"><div class="aico">${a.ico}</div><div><div class="atit">${a.title}</div><div class="adesc">${a.desc}</div></div><div class="achk">✓</div></div>`;
   }).join('');
 }
 
-// ============================================================
-// TAB SWITCHING
-// ============================================================
-function switchTab(name) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  event.target.classList.add('active');
-  if (name === 'stats') renderStats();
-  if (name === 'leaderboard') renderLeaderboard();
-  if (name === 'achievements') renderAchievements();
+// ═══════════════════════════════════════════════
+// CONFIG BUTTONS
+// ═══════════════════════════════════════════════
+function grpOn(id,btn){document.querySelectorAll('#'+id+' .gb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+function setMode(m,btn){G.mode=m;grpOn('grp-mode',btn);document.getElementById('grp-time').style.display=m==='time'?'':'none';document.getElementById('grp-wc').style.display=m==='words'?'':'none';boot();}
+function setTime(t,btn){G.tl=t;grpOn('grp-time',btn);boot();}
+function setWC(n,btn){G.wc=n;grpOn('grp-wc',btn);boot();}
+function setCont(c,btn){G.cont=c;grpOn('grp-cont',btn);document.getElementById('grp-diff').style.display=c==='words'?'':'none';boot();}
+function setDiff(d,btn){G.diff=d;grpOn('grp-diff',btn);boot();}
+function togOpt(opt,btn){
+  if(opt==='pun')G.pun=!G.pun;
+  else if(opt==='num')G.num=!G.num;
+  else if(opt==='hard')G.hard=!G.hard;
+  else if(opt==='sound')G.sound=!G.sound;
+  btn.classList.toggle('on');save();
+  if(opt!=='sound')boot();
 }
+function setFCat(cat,btn){G.fcat=cat;document.querySelectorAll('.fcat').forEach(b=>b.classList.remove('on'));btn.classList.add('on');bootFlow();focusHI();}
 
-// ============================================================
-// CONFIG CONTROLS
-// ============================================================
-function setMode(m) {
-  S.mode = m;
-  document.querySelectorAll('.cfg-group:first-child .cfg-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('time-opts').style.display = m==='time'?'':'none';
-  document.getElementById('word-opts').style.display = m==='words'?'':'none';
-  initTest();
-}
-function setTimeLimit(t) {
-  S.timeLimit = t;
-  document.querySelectorAll('#time-opts .cfg-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  initTest();
-}
-function setWordCount(n) {
-  S.wordCount = n;
-  document.querySelectorAll('#word-opts .cfg-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  initTest();
-}
-function setContent(c) {
-  S.contentMode = c;
-  document.querySelectorAll('.cfg-group:nth-child(3) .cfg-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('diff-opts').style.display = c==='words'?'':'none';
-  initTest();
-}
-function setDiff(d) {
-  S.difficulty = d;
-  document.querySelectorAll('#diff-opts .cfg-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  initTest();
-}
-function toggleOpt(opt) {
-  if (opt==='punct') { S.punct=!S.punct; document.getElementById('tog-punct').classList.toggle('active'); }
-  if (opt==='nums') { S.nums=!S.nums; document.getElementById('tog-nums').classList.toggle('active'); }
-  if (opt==='hard') { S.hard=!S.hard; document.getElementById('tog-hard').classList.toggle('active'); }
-  if (opt==='sound') { S.sound=!S.sound; document.getElementById('tog-sound').classList.toggle('active'); }
-  saveData();
-  if (opt !== 'sound') initTest();
-}
-
-// ============================================================
+// ═══════════════════════════════════════════════
 // SETTINGS
-// ============================================================
-function setTheme(t, silent) {
-  S.theme = t;
-  document.body.className = t === 'dark' ? '' : 'theme-'+t;
-  document.querySelectorAll('.theme-dot').forEach((d,i)=>{
-    const themes=['dark','light','hacker','dracula','ocean'];
-    d.classList.toggle('active', themes[i]===t);
-  });
-  if (!silent) saveData();
+// ═══════════════════════════════════════════════
+function _applyTheme(t){
+  document.body.className=t==='dark'?'':'t-'+t;
+  document.querySelectorAll('.dot').forEach((d,i)=>{const ts=['dark','light','hacker','dracula','ocean'];d.classList.toggle('on',ts[i]===t);});
 }
-function setCaretStyle(s, silent) {
-  S.caretStyle = s;
-  document.querySelectorAll('[id^=car-]').forEach(b => b.classList.remove('active'));
-  document.getElementById('car-'+s)?.classList.add('active');
-  if (!silent) saveData();
-  renderCaret();
-}
-function setSoundPref(v, silent) {
-  S.sound = v;
-  document.getElementById('snd-on').classList.toggle('active', v);
-  document.getElementById('snd-off').classList.toggle('active', !v);
-  document.getElementById('tog-sound').classList.toggle('active', v);
-  if (!silent) saveData();
+function applyTheme(t,btn){_applyTheme(t);save();}
+function setCaret(s,btn){G.caret=s;document.querySelectorAll('#car-grp .sbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');save();placeCaret();}
+function setSnd(v,btn){G.sound=v;document.querySelectorAll('#snd-grp .sbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('tg-sound').classList.toggle('on',v);save();}
+
+// ═══════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════
+function goTab(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on');
+  btn.classList.add('on');
+  if(id==='stats')renderStats();
+  if(id==='lb')renderLB();
+  if(id==='ach')renderAchs();
 }
 
-// ============================================================
-// GLOBAL KEY HANDLER
-// ============================================================
-document.addEventListener('keydown', e => {
-  if (e.key === 'Tab' && document.getElementById('tab-test').classList.contains('active')) {
-    e.preventDefault();
-    initTest();
-  }
+// ═══════════════════════════════════════════════
+// GLOBAL KEYS
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.key==='Tab'&&document.getElementById('tab-test').classList.contains('on')){e.preventDefault();boot();}
 });
 
-// ============================================================
-// BOOT
-// ============================================================
-loadData();
-initTest();
+// ═══════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════
+load();
+boot();
 </script>
 </body>
 </html>
