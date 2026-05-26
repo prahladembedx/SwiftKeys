@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SwiftKeys — Typing Test</title>
+<meta name="description" content="A fast, beautiful typing speed test app">
+<meta name="theme-color" content="#e2b714">
+<link rel="manifest" id="pwa-manifest">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f0f13'/><text y='.9em' font-size='80' x='10'>⌨</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
@@ -14,6 +18,23 @@
 .t-dracula{--bg:#282a36;--sur:#21222c;--sur2:#2c2f3f;--bor:#44475a;--txt:#f8f8f2;--sub:#6272a4;--acc:#bd93f9;--ok:#50fa7b;--err:#ff5555;--cur:#bd93f9}
 .t-ocean{--bg:#0d1b2a;--sur:#1b2838;--sur2:#1e3045;--bor:#2d4a6a;--txt:#cdd6f4;--sub:#4d7a9a;--acc:#00bfff;--ok:#5af78e;--err:#ff6b6b;--cur:#00bfff}
 html,body{min-height:100%;background:var(--bg);color:var(--txt);font-family:'JetBrains Mono',monospace;transition:background .25s,color .25s}
+/* Hindi Devanagari font fallback */
+.lang-hi #wbox,.lang-hi .w,.lang-hi .ch,.lang-hi #fov,.lang-hi .fc{font-family:'Noto Sans Devanagari','Mangal','JetBrains Mono',sans-serif!important;letter-spacing:.02em}
+/* Language & custom word CSS */
+.lang-bar{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:0}
+.lgb{background:transparent;border:1px solid var(--bor);color:var(--sub);padding:4px 12px;border-radius:20px;cursor:pointer;font-family:'JetBrains Mono';font-size:11px;transition:all .15s}
+.lgb:hover{border-color:var(--sub);color:var(--txt)}
+.lgb.on{background:var(--acc);border-color:var(--acc);color:var(--bg);font-weight:700}
+/* Custom word upload */
+.custom-box{background:var(--sur2);border:2px dashed var(--bor);border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:border-color .2s;margin-top:12px}
+.custom-box:hover,.custom-box.drag{border-color:var(--acc)}
+.custom-box input[type=file]{display:none}
+.custom-tag{display:inline-flex;align-items:center;gap:5px;background:color-mix(in srgb,var(--acc) 14%,transparent);border:1px solid var(--acc);color:var(--acc);border-radius:20px;padding:3px 10px;font-size:11px;margin:3px}
+/* PWA install banner */
+#pwa-bar{display:none;background:var(--sur);border-bottom:1px solid var(--bor);padding:8px 36px;align-items:center;justify-content:space-between;font-size:12px;gap:10px}
+#pwa-bar.show{display:flex}
+.pwa-btn{background:var(--acc);color:var(--bg);border:none;padding:5px 16px;border-radius:6px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;font-weight:700}
+.pwa-close{background:transparent;border:none;color:var(--sub);cursor:pointer;font-size:16px;line-height:1}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--bor);border-radius:4px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -143,6 +164,14 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 </style>
 </head>
 <body>
+<!-- PWA Install Banner -->
+<div id="pwa-bar">
+  <span>⌨ <strong style="color:var(--acc)">SwiftKeys</strong> can be installed as a desktop app!</span>
+  <div style="display:flex;gap:8px;align-items:center">
+    <button class="pwa-btn" onclick="installPWA()">Install App</button>
+    <button class="pwa-close" onclick="document.getElementById('pwa-bar').classList.remove('show')">✕</button>
+  </div>
+</div>
 
 <header>
   <div class="logo">⌨ SWIFTKEYS</div>
@@ -200,6 +229,15 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
       <button class="tgl" id="tg-num" onclick="togOpt('num',this)">123 Nums</button>
       <button class="tgl" id="tg-hard" onclick="togOpt('hard',this)">⚠ Hard</button>
       <button class="tgl on" id="tg-sound" onclick="togOpt('sound',this)">♪ Sound</button>
+    </div>
+    <!-- Language selector -->
+    <div class="lang-bar" id="lang-bar">
+      <span style="font-size:10px;color:var(--sub);align-self:center;text-transform:uppercase;letter-spacing:1px">Lang:</span>
+      <button class="lgb on" onclick="setLang('en',this)">🇬🇧 EN</button>
+      <button class="lgb" onclick="setLang('hi',this)">🇮🇳 हिंदी</button>
+      <button class="lgb" onclick="setLang('es',this)">🇪🇸 ES</button>
+      <button class="lgb" onclick="setLang('fr',this)">🇫🇷 FR</button>
+      <button class="lgb" onclick="setLang('custom',this)" id="lg-custom" style="display:none">📁 Custom</button>
     </div>
   </div>
 
@@ -311,6 +349,34 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
       <div class="sctrl"><button class="sbtn" style="color:var(--err);border-color:var(--err)" onclick="resetAll()">Reset</button></div>
     </div>
   </div>
+
+  <!-- Custom Word List Upload -->
+  <div style="margin-top:14px;background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:18px">
+    <div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">📁 Custom Word List</div>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:10px">Upload a .txt file or paste words below. Words separated by newline, comma, or space.</div>
+    <div class="custom-box" id="dropzone" onclick="document.getElementById('file-inp').click()"
+      ondragover="event.preventDefault();this.classList.add('drag')"
+      ondragleave="this.classList.remove('drag')"
+      ondrop="handleDrop(event)">
+      <input type="file" id="file-inp" accept=".txt" onchange="handleFileUpload(event)">
+      <div style="font-size:28px;margin-bottom:6px">📄</div>
+      <div style="font-size:13px;color:var(--sub)">Click or drag &amp; drop a <strong>.txt</strong> file here</div>
+      <div style="font-size:11px;color:var(--sub);margin-top:3px">One word per line — or comma/space separated</div>
+    </div>
+    <textarea id="custom-paste" placeholder="Or paste words here, one per line or comma-separated..."
+      oninput="handlePaste()"
+      style="width:100%;margin-top:10px;background:var(--sur2);border:1px solid var(--bor);color:var(--txt);border-radius:8px;padding:10px;font-family:'JetBrains Mono';font-size:12px;resize:vertical;min-height:80px;outline:none;transition:border-color .18s"
+      onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--bor)'"></textarea>
+    <div id="custom-preview" style="margin-top:8px;display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:11px;color:var(--sub)"><span id="custom-count">0</span> words loaded</span>
+        <button onclick="clearCustomWords()" style="background:transparent;border:1px solid var(--err);color:var(--err);padding:3px 10px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono';font-size:11px">✕ Clear</button>
+      </div>
+      <div id="custom-tags" style="max-height:80px;overflow-y:auto"></div>
+      <button onclick="useCustomWords()" style="margin-top:8px;background:var(--acc);color:var(--bg);border:none;padding:8px 18px;border-radius:7px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;font-weight:700;width:100%">✓ Use These Words in Test</button>
+    </div>
+  </div>
+
   <div style="margin-top:14px;background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:18px">
     <div style="font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Keyboard Shortcuts</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px">
@@ -332,6 +398,26 @@ const WL={
   medium:['about','above','across','action','actually','agree','already','always','another','answer','around','because','become','before','between','building','certain','change','children','coming','company','complete','consider','continue','control','countries','create','decided','develop','different','direct','during','either','enough','every','example','experience','family','finally','following','found','further','given','going','government','great','group','having','helps','however','human','important','include','including','increase','interest','involved','itself','known','large','later','learn','leave','level','likely','local','longer','making','matter','might','money','month','move','national','never','number','often','order','outside','own','part','people','place','plan','point','possible','power','program','provide','public','question','rather','real','reason','recent','result','right','school','second','since','small','social','something','sometimes','still','story','study','system','taken','through','together','toward','true','under','until','usually','various','water','where','which','while','whole','within','without','world','write','young','along','better','called','cause','city','close','done','draw','early','face','fact','feel','form','free','full','gave','hold','hour','idea','keep','knew','last','left','life','light','line','live','made','main','name','near','need','next','night','once','open','past','room','same','seem','set','show','side','simple','song','soon','state','stay','stop','sure','talk','watch'],
   hard:['accommodate','ambiguous','anomaly','apparatus','arbitrary','articulate','assassination','asterisk','bureaucratic','camouflage','catastrophic','circumference','clandestine','coincidence','commemorate','conscientious','controversial','crystallize','deteriorate','dilapidated','disappearance','disintegrate','ecclesiastical','embarrassment','exaggeration','exhilaration','extraordinary','facetious','fascinating','flabbergasted','gregarious','hallucination','hypocritical','idiosyncratic','illegitimate','incorrigible','indispensable','infrastructure','ingenious','instantaneous','juxtaposition','kaleidoscope','labyrinthine','magnificent','manipulative','metamorphosis','miscellaneous','mysterious','nonchalant','oblivious','omniscient','overwhelm','paradoxical','perseverance','phenomenon','photosynthesis','physiological','precarious','predominantly','psychologically','questionnaire','quintessential','reverberate','revolutionary','rigorous','scrupulous','silhouette','simultaneous','sophisticated','spontaneous','strenuous','subterranean','supernatural','surveillance','suspicious','synonymous','technological','tempestuous','theoretical','treacherous','unbelievable','undeniable','unnecessary','unprecedented','vaccination','vengeance','vulnerable','whimsical','zealousness']
 };
+
+// ── LANGUAGE WORD LISTS ──
+const LANG_WL={
+  hi:{
+    easy:['यह','वह','एक','में','है','का','के','की','और','को','से','पर','था','हो','जो','कि','भी','हम','तुम','आप','घर','काम','खाना','पानी','दिन','रात','बच्चा','माँ','बाप','भाई','बहन','दोस्त','शहर','गाँव','स्कूल','किताब','पेड़','फूल','नाम','समय'],
+    medium:['सुंदर','जानकारी','विद्यालय','परिवार','सरकार','स्वास्थ्य','समाचार','व्यापार','अनुभव','विकास','शिक्षा','राष्ट्र','संस्कृति','पर्यावरण','तकनीक','अध्ययन','कार्यक्रम','महत्वपूर्ण','जिम्मेदारी','उपलब्धि','प्रगति','संगठन','परिवर्तन','अवसर','प्रयास','सफलता','समझना','भाषा','संचार','अधिकार'],
+    hard:['प्रतिस्पर्धात्मक','उत्तरदायित्व','संवैधानिक','अंतर्राष्ट्रीय','न्यायशास्त्र','राजनयिक','प्रशासनिक','वैज्ञानिक','तकनीकी','सांस्कृतिक']
+  },
+  es:{
+    easy:['el','la','de','que','y','en','los','se','del','las','un','por','con','una','su','para','es','al','lo','como','más','pero','sus','le','ya','fue','todo','esta','son','entre','cuando','muy','sin','sobre','también','me','hasta','hay','donde','quien','desde','todo','nos','durante','uno','ni','contra','ese','eso','habían','esto'],
+    medium:['también','porque','después','entonces','siempre','nunca','ahora','antes','mucho','poco','grande','pequeño','bueno','malo','nuevo','viejo','primero','segundo','último','mejor','peor','mundo','tiempo','vida','persona','ciudad','país','trabajo','familia','amigo','escuela','gobierno','historia','cultura','música','deporte','ciencia','tecnología','información','comunicación'],
+    hard:['extraordinario','responsabilidad','circunstancias','reconocimiento','independencia','comportamiento','administración','investigación','comunicaciones','transformación','establecimiento','fundamentalmente','representación','consecuentemente','ininterrumpidamente','extraordinariamente','perpendicular','simultáneamente','confidencialidad','institucionalizar']
+  },
+  fr:{
+    easy:['le','la','les','de','du','un','une','des','et','en','au','aux','qui','que','dans','sur','avec','pour','par','pas','plus','tout','mais','comme','bien','son','sa','ses','ce','cet','elle','nous','vous','ils','elles','ont','être','avoir','faire','aller','voir','vouloir','pouvoir','venir','dire','prendre','donner','savoir','mettre'],
+    medium:['toujours','jamais','maintenant','avant','après','pendant','beaucoup','souvent','parfois','jamais','quelque','chaque','autre','même','ainsi','alors','aussi','encore','enfin','donc','cependant','pourtant','néanmoins','toutefois','plusieurs','quelques','certain','monde','temps','personne','ville','pays','travail','famille','école','histoire','culture','science','musique'],
+    hard:['extraordinaire','responsabilité','incompréhensible','vraisemblablement','indépendamment','développement','environnement','gouvernement','manifestement','particulièrement','approximativement','caractéristique','correspondance','différemment','efficacement','fondamentalement','habituellement','immédiatement','naturellement','principalement']
+  }
+};
+
 const QUOTES=['The only way to do great work is to love what you do. If you have not found it yet keep looking and do not settle.','In the middle of every difficulty lies opportunity. Success is not final failure is not fatal it is the courage to continue that counts.','It does not matter how slowly you go as long as you do not stop. Our greatest glory is not in never falling but in rising every time we fall.','The future belongs to those who believe in the beauty of their dreams. Do not watch the clock do what it does and keep going.','Believe you can and you are halfway there. Whether you think you can or you cannot you are right. The secret of getting ahead is getting started.','Two roads diverged in a wood and I took the one less traveled by and that has made all the difference in the world.','I have not failed I have just found ten thousand ways that will not work. The secret of success is to know something nobody else knows.','Life is what happens when you are busy making other plans. In three words I can sum up everything I have learned about life it goes on.'];
 const CSNIP=['function fibonacci(n) { if (n <= 1) return n; return fibonacci(n - 1) + fibonacci(n - 2); }','const arr = [1, 2, 3]; const sum = arr.reduce((acc, val) => acc + val, 0); console.log(sum);','class Stack { constructor() { this.items = []; } push(item) { this.items.push(item); } pop() { return this.items.pop(); } }','async function getData(url) { const res = await fetch(url); const data = await res.json(); return data; }','const sorted = arr.sort((a, b) => a - b); const idx = sorted.findIndex(x => x === target);','import { useState } from "react"; export default function Counter() { const [n, setN] = useState(0); return <button onClick={()=>setN(n+1)}>{n}</button>; }'];
 const FLOW={
@@ -366,6 +452,7 @@ const ACHS=[
 const G={
   mode:'time',tl:60,wc:50,diff:'medium',cont:'words',
   pun:false,num:false,hard:false,sound:true,caret:'line',
+  lang:'en', customWords:[], useCustom:false,
   words:[],cst:[],ci:0,inp:'',ts:'idle',
   t0:null,tleft:60,ticker:null,lticker:null,wtrack:[],
   fcat:'animals',fq:[],fidx:0,finp:'',ftyped:0,ferr:0,
@@ -401,6 +488,8 @@ function save(){
     localStorage.setItem('sk_th',document.body.className||'');
     localStorage.setItem('sk_cr',G.caret);
     localStorage.setItem('sk_sn',G.sound);
+    localStorage.setItem('sk_lg',G.lang);
+    if(G.customWords.length)localStorage.setItem('sk_cw',JSON.stringify(G.customWords));
   }catch(e){}
 }
 function load(){
@@ -414,6 +503,17 @@ function load(){
     const th=localStorage.getItem('sk_th');if(th!==null)_applyTheme(th);
     const cr=localStorage.getItem('sk_cr');if(cr)G.caret=cr;
     const sn=localStorage.getItem('sk_sn');if(sn!==null)G.sound=(sn==='true');
+    const lg=localStorage.getItem('sk_lg');
+    if(lg&&lg!=='en'){
+      G.lang=lg;
+      document.querySelectorAll('.lgb').forEach((b,i)=>{
+        const langs=['en','hi','es','fr','custom'];b.classList.toggle('on',langs[i]===lg);
+      });
+      if(lg==='hi')document.body.classList.add('lang-hi');
+      if(lg==='custom'){document.getElementById('lg-custom').style.display='';}
+    }
+    const cw=localStorage.getItem('sk_cw');
+    if(cw){G.customWords=JSON.parse(cw);if(lg==='custom')G.useCustom=true;}
   }catch(e){}
 }
 function resetAll(){if(!confirm('Reset all data?'))return;G.hist=[];G.achs=[];G.lb=[];G.pb=0;save();renderStats();renderLB();renderAchs();alert('Done!');}
@@ -425,12 +525,22 @@ function saveName(){G.name=document.getElementById('lbname').value||'Player';sav
 function genWords(){
   if(G.cont==='quotes')return QUOTES[Math.floor(Math.random()*QUOTES.length)].split(' ');
   if(G.cont==='code')return CSNIP[Math.floor(Math.random()*CSNIP.length)].split(' ');
-  const list=WL[G.diff];const n=G.mode==='time'?250:G.wc;
+  // Custom words
+  if(G.useCustom&&G.customWords.length>0){
+    const n=G.mode==='time'?250:G.wc;const out=[];
+    for(let i=0;i<n;i++)out.push(G.customWords[Math.floor(Math.random()*G.customWords.length)]);
+    return out;
+  }
+  // Language word list
+  const list=G.lang!=='en'&&LANG_WL[G.lang]?LANG_WL[G.lang][G.diff]||LANG_WL[G.lang].easy:WL[G.diff];
+  const n=G.mode==='time'?250:G.wc;
   const out=[];
   for(let i=0;i<n;i++){
     let w=list[Math.floor(Math.random()*list.length)];
-    if(G.num&&Math.random()<.15)w=''+Math.floor(Math.random()*999+1);
-    if(G.pun&&Math.random()<.2)w+=['.', ',', '!', '?'][Math.floor(Math.random()*4)];
+    if(G.lang==='en'){
+      if(G.num&&Math.random()<.15)w=''+Math.floor(Math.random()*999+1);
+      if(G.pun&&Math.random()<.2)w+=['.', ',', '!', '?'][Math.floor(Math.random()*4)];
+    }
     out.push(w);
   }
   return out;
@@ -885,6 +995,110 @@ function goTab(id,btn){
 document.addEventListener('keydown',e=>{
   if(e.key==='Tab'&&document.getElementById('tab-test').classList.contains('on')){e.preventDefault();boot();}
 });
+
+// ═══════════════════════════════════════════════
+// LANGUAGE
+// ═══════════════════════════════════════════════
+function setLang(lang,btn){
+  G.lang=lang;
+  document.querySelectorAll('.lgb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  // Toggle Devanagari font class on body
+  document.body.classList.toggle('lang-hi',lang==='hi');
+  // Show/hide diff group (Hindi hard list is small)
+  const hasDiff=lang==='en'||lang==='es'||lang==='fr';
+  document.getElementById('grp-diff').style.display=hasDiff&&G.cont==='words'?'':'none';
+  // Custom lang: show custom lang button
+  if(lang==='custom'){document.getElementById('lg-custom').style.display='';btn.classList.add('on');}
+  if(lang!=='custom'){G.useCustom=false;}
+  save();boot();
+}
+
+// ═══════════════════════════════════════════════
+// CUSTOM WORD LIST
+// ═══════════════════════════════════════════════
+function parseWords(text){
+  return text.split(/[\n,\s]+/).map(w=>w.trim()).filter(w=>w.length>0);
+}
+function handleFileUpload(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{loadCustomWords(ev.target.result,file.name);};
+  reader.readAsText(file);
+}
+function handleDrop(e){
+  e.preventDefault();document.getElementById('dropzone').classList.remove('drag');
+  const file=e.dataTransfer.files[0];if(!file||!file.name.endsWith('.txt'))return alert('Please drop a .txt file');
+  const reader=new FileReader();
+  reader.onload=ev=>{loadCustomWords(ev.target.result,file.name);};
+  reader.readAsText(file);
+}
+function handlePaste(){
+  const text=document.getElementById('custom-paste').value;
+  if(!text.trim())return;
+  loadCustomWords(text,'pasted text');
+}
+function loadCustomWords(text,source){
+  const words=parseWords(text);
+  if(words.length<2){alert('Need at least 2 words. Got: '+words.length);return;}
+  G.customWords=words;
+  // Show preview
+  document.getElementById('custom-count').textContent=words.length;
+  document.getElementById('custom-preview').style.display='block';
+  const tags=document.getElementById('custom-tags');
+  tags.innerHTML=words.slice(0,30).map(w=>`<span class="custom-tag">${w}</span>`).join('')+(words.length>30?`<span style="font-size:11px;color:var(--sub);margin-left:6px">+${words.length-30} more</span>`:'');
+}
+function useCustomWords(){
+  if(!G.customWords.length)return;
+  G.useCustom=true;
+  // Switch to custom lang in lang bar
+  document.querySelectorAll('.lgb').forEach(b=>b.classList.remove('on'));
+  const cb=document.getElementById('lg-custom');cb.style.display='';cb.classList.add('on');
+  G.lang='custom';
+  document.body.classList.remove('lang-hi');
+  save();boot();
+  goTab('test',document.querySelector('.tb'));
+}
+function clearCustomWords(){
+  G.customWords=[];G.useCustom=false;G.lang='en';
+  document.getElementById('custom-preview').style.display='none';
+  document.getElementById('custom-paste').value='';
+  document.getElementById('file-inp').value='';
+  document.querySelectorAll('.lgb').forEach((b,i)=>{b.classList.toggle('on',i===0);});
+  document.body.classList.remove('lang-hi');
+  save();
+}
+
+// ═══════════════════════════════════════════════
+// PWA
+// ═══════════════════════════════════════════════
+let _deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();_deferredPrompt=e;
+  document.getElementById('pwa-bar').classList.add('show');
+});
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('pwa-bar').classList.remove('show');
+  _deferredPrompt=null;
+});
+function installPWA(){
+  if(!_deferredPrompt)return;
+  _deferredPrompt.prompt();
+  _deferredPrompt.userChoice.then(()=>{_deferredPrompt=null;document.getElementById('pwa-bar').classList.remove('show');});
+}
+// Setup PWA manifest dynamically
+(function setupPWA(){
+  const icon='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="80" fill="%230f0f13"/><text y="340" x="60" font-size="340" font-family="serif">⌨</text></svg>';
+  const manifest={name:'SwiftKeys — Typing Test',short_name:'SwiftKeys',description:'A fast, beautiful typing speed test app',start_url:'./',display:'standalone',background_color:'#0f0f13',theme_color:'#e2b714',icons:[{src:icon,sizes:'512x512',type:'image/svg+xml'}]};
+  const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
+  document.getElementById('pwa-manifest').href=URL.createObjectURL(blob);
+  // Register service worker via blob
+  if('serviceWorker' in navigator){
+    const swCode=`const C='sk-v1';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.add('.'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k))))));`;
+    const swBlob=new Blob([swCode],{type:'application/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+  }
+})();
 
 // ═══════════════════════════════════════════════
 // START
