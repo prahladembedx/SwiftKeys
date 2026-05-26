@@ -1,8 +1,7 @@
 # ⌨ SwiftKeys — Typing Speed Test App
 
-> A feature-rich, beautiful typing test application built with pure HTML, CSS, and JavaScript — no frameworks, no build tools, just open and type.
+> A feature-rich, beautiful typing test application — pure HTML, CSS, and JavaScript. No frameworks, no build step. Just open and type.
 
-![SwiftKeys Preview](https://img.shields.io/badge/SwiftKeys-v1.0-e2b714?style=for-the-badge&logo=keyboard&logoColor=black)
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
@@ -14,149 +13,84 @@
 ### ⏱ Test Modes
 - **Time Mode** — 15s / 30s / 60s / 120s
 - **Word Count Mode** — 10 / 25 / 50 / 100 words
+- **⬆ Flow Mode** — One word at a time, scrolls upward
+
+### 🌍 Multi-Language Support
+| Language | Script | Difficulty Levels |
+|----------|--------|-------------------|
+| 🇬🇧 English | Latin | Easy / Medium / Hard |
+| 🇮🇳 Hindi | देवनागरी (Devanagari) | Easy / Medium / Hard |
+| 🇪🇸 Spanish | Latin + accents | Easy / Medium / Hard |
+| 🇫🇷 French | Latin + accents | Easy / Medium / Hard |
+
+### 📁 Custom Word List Upload
+- Upload any `.txt` file (drag & drop or click)
+- Or paste words directly in the text area
+- Words separated by newline, comma, or space
+- Preview first 30 words before using
 
 ### 📊 Real-Time Stats
-- Live **WPM** (Words Per Minute)
-- Live **Accuracy** percentage
-- Live **Error** count
-- Countdown timer
+- Live WPM, Accuracy %, Error count, Countdown timer
+- Detailed results: Consistency score, Correct words/chars
 
 ### ✍ Content Modes
-- **Words** — Common English words (Easy / Medium / Hard difficulty)
+- **Words** — Common vocabulary by difficulty
 - **Quotes** — Famous inspirational quotes
-- **Code** — Programming snippets (JS, Python, SQL, React)
+- **Code** — JS, Python, React, SQL snippets
+- **Flow** — Categories: Animals, Names, Countries, Colors, Fruits, Cities, Numbers
 
-### 🎨 5 Beautiful Themes
-| Theme | Description |
-|-------|-------------|
-| 🌑 Dark | Sleek dark with golden accent (default) |
-| ☀️ Light | Clean white with amber accent |
-| 💻 Hacker | Matrix-style green on black |
-| 🧛 Dracula | Purple-accented dark theme |
-| 🌊 Ocean | Deep blue with cyan accent |
+### 🎨 5 Themes
+| Theme | Preview |
+|-------|---------|
+| 🌑 Dark | Dark bg, golden accent |
+| ☀️ Light | Clean white, amber accent |
+| 💻 Hacker | Matrix green on black |
+| 🧛 Dracula | Purple-accented dark |
+| 🌊 Ocean | Deep blue with cyan |
 
-### ⚙ Customization
-- **Punctuation toggle** — Add commas, periods, question marks
-- **Numbers toggle** — Include random numbers in words
-- **Hard Mode** — Backspace disabled (no corrections!)
-- **Sound Effects** — Satisfying click sounds via Web Audio API
-- **3 Caret Styles** — Line │, Block █, Underline _
-
-### 📈 Results Screen
-- Detailed WPM, Accuracy, Consistency, Errors breakdown
-- **WPM-over-time chart** (Chart.js)
-- Correct words and characters count
-- New Personal Best detection
-
-### 🏆 Achievements (14 total)
-- Speed milestones (50, 75, 100, 120 WPM)
-- Accuracy milestones (95%, 100%)
-- Test streaks (5, 10, 50 tests)
-- Special challenges (Zero Mistakes, Hard Mode finisher, Code Monkey, Marathon)
-
-### 📋 Stats & History
-- Last 20 tests in a history table
-- Progress chart (WPM + Accuracy trends)
-- All-time Personal Best
-- Average WPM and accuracy (last 10 tests)
-- Total words typed counter
-
-### 🥇 Leaderboard
-- Top 20 scores saved locally
-- Enter your name and track your rank
-- Medal system (🥇🥈🥉) for top 3
-
-### ⌨ Keyboard Shortcuts
-| Key | Action |
-|-----|--------|
-| `Tab` | Restart test |
-| `Esc` | Reset test |
-| `Space` | Submit word and move to next |
-| `Backspace` | Delete character (disabled in hard mode) |
-
----
-
-## 🛠 Tech Stack
-
-| Component | Technology |
-|-----------|------------|
-| Frontend | HTML5, CSS3, Vanilla JavaScript |
-| Charts | Chart.js 4.4 |
-| Fonts | JetBrains Mono, Bebas Neue (Google Fonts) |
-| Sound | Web Audio API |
-| Storage | localStorage |
-| Hosting | Any static file server / GitHub Pages |
-
----
-
-## 🚀 Getting Started
-
-### Option 1 — Open directly
-```bash
-# Just open the file in your browser!
-open index.html
-```
-
-### Option 2 — Local server
-```bash
-# Using Python
-python -m http.server 8080
-
-# Using Node.js
-npx serve .
-
-# Using VS Code — Install Live Server extension and click Go Live
-```
-
-Then visit `http://localhost:8080`
-
-### Option 3 — GitHub Pages
-1. Fork this repository
-2. Go to **Settings → Pages**
-3. Set source to **main branch / root**
-4. Your app is live at `https://yourusername.github.io/swiftkeys`
+### ⚙ More Features
+- Punct / Numbers / Hard Mode (no backspace) toggles
+- Sound effects via Web Audio API
+- 3 caret styles (Line, Block, Underline)
+- 14 Achievements to unlock
+- Stats tab with progress chart
+- Local Leaderboard with medal system
+- **PWA** — Install as desktop app (on HTTPS)
+- `Tab` to restart, `Esc` to reset
 
 ---
 
 ## 📁 Project Structure
 
 ```
-SwiftKeys/
-├── index.html          # Complete app (single file)
-└── README.md           # This file
+swiftkeys/
+├── index.html              ← Complete app (all-in-one)
+├── package.json            ← Project metadata & scripts
+├── .gitignore              ← Git ignore rules
+├── README.md               ← This file
+└── .github/
+    └── workflows/
+        └── deploy.yml      ← Auto-deploy to GitHub Pages
 ```
 
-SwiftKeys is intentionally a **single HTML file** — making it ultra-portable. Drop it anywhere and it works.
+> SwiftKeys is intentionally a **single HTML file** — ultra-portable, zero dependencies at runtime.
 
 ---
 
-## 🎯 Roadmap / Future Features
+## 🎯 Roadmap
 
 - [ ] Multiplayer race mode (WebSockets)
-- [ ] Custom word list upload
-- [ ] More language support (Hindi, Spanish, French)
-- [ ] PWA support (installable as mobile app)
+- [ ] More languages (German, Japanese, Arabic)
 - [ ] Export stats as CSV
 - [ ] Custom theme editor
-- [ ] Replay past tests
-
----
-
-## 🤝 Contributing
-
-Pull requests are welcome!
-
-```bash
-git clone https://github.com/yourusername/swiftkeys.git
-cd swiftkeys
-# Edit index.html
-# Open in browser to test
-```
+- [ ] Mobile keyboard support
 
 ---
 
 ## 📄 License
 
-© prahladembedX --- All Rights Reserved.
+MIT — use it, modify it, share it freely.
 
- — If you like it, give it a star on GitHub!
+---
+
+Made with ❤️ — Star ⭐ the repo if you like it!
