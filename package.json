@@ -1,0 +1,46 @@
+{
+  "name": "swiftkeys",
+  "version": "1.0.0",
+  "description": "A fast, beautiful typing speed test app with multi-language support, Flow mode, PWA, and more.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve . -p 3000",
+    "dev": "npx live-server --port=3000 --open=index.html",
+    "build": "echo 'No build step needed — SwiftKeys is pure HTML/CSS/JS'",
+    "lint": "echo 'No linting configured'",
+    "deploy": "npx gh-pages -d ."
+  },
+  "keywords": [
+    "typing",
+    "typing-test",
+    "wpm",
+    "speed-typing",
+    "monkeytype",
+    "pwa",
+    "javascript",
+    "html",
+    "css",
+    "multilingual",
+    "hindi",
+    "spanish",
+    "french"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/swiftkeys.git"
+  },
+  "homepage": "https://yourusername.github.io/swiftkeys",
+  "bugs": {
+    "url": "https://github.com/yourusername/swiftkeys/issues"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.0",
+    "gh-pages": "^6.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
