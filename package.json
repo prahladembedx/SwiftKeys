@@ -1,5 +1,5 @@
 {
-  "name": "swiftkeys",
+  "name": "SwiftKeys",
   "version": "1.0.0",
   "description": "A fast, beautiful typing speed test app with multi-language support, Flow mode, PWA, and more.",
   "main": "index.html",
@@ -29,11 +29,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/swiftkeys.git"
+    "url": "https://github.com/prahladembedx/SwiftKeys.git"
   },
-  "homepage": "https://yourusername.github.io/swiftkeys",
+  "homepage": "https://prahladembedx.github.io/SwiftKeys",
   "bugs": {
-    "url": "https://github.com/yourusername/swiftkeys/issues"
+    "url": "https://github.com/prahladembedx/SwiftKeys/issues"
   },
   "devDependencies": {
     "live-server": "^1.2.2",
