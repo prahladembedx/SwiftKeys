@@ -19,19 +19,15 @@
 .t-dracula{--bg:#282a36;--sur:#21222c;--sur2:#2c2f3f;--bor:#44475a;--txt:#f8f8f2;--sub:#6272a4;--acc:#bd93f9;--ok:#50fa7b;--err:#ff5555;--cur:#bd93f9}
 .t-ocean{--bg:#0d1b2a;--sur:#1b2838;--sur2:#1e3045;--bor:#2d4a6a;--txt:#cdd6f4;--sub:#4d7a9a;--acc:#00bfff;--ok:#5af78e;--err:#ff6b6b;--cur:#00bfff}
 html,body{min-height:100%;background:var(--bg);color:var(--txt);font-family:'JetBrains Mono',monospace;transition:background .25s,color .25s}
-/* Hindi Devanagari font fallback */
 .lang-hi #wbox,.lang-hi .w,.lang-hi .ch,.lang-hi #fov,.lang-hi .fc{font-family:'Noto Sans Devanagari','Mangal','JetBrains Mono',sans-serif!important;letter-spacing:.02em}
-/* Language & custom word CSS */
 .lang-bar{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:0}
 .lgb{background:transparent;border:1px solid var(--bor);color:var(--sub);padding:4px 12px;border-radius:20px;cursor:pointer;font-family:'JetBrains Mono';font-size:11px;transition:all .15s}
 .lgb:hover{border-color:var(--sub);color:var(--txt)}
 .lgb.on{background:var(--acc);border-color:var(--acc);color:var(--bg);font-weight:700}
-/* Custom word upload */
 .custom-box{background:var(--sur2);border:2px dashed var(--bor);border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:border-color .2s;margin-top:12px}
 .custom-box:hover,.custom-box.drag{border-color:var(--acc)}
 .custom-box input[type=file]{display:none}
 .custom-tag{display:inline-flex;align-items:center;gap:5px;background:color-mix(in srgb,var(--acc) 14%,transparent);border:1px solid var(--acc);color:var(--acc);border-radius:20px;padding:3px 10px;font-size:11px;margin:3px}
-/* PWA install banner */
 #pwa-bar{display:none;background:var(--sur);border-bottom:1px solid var(--bor);padding:8px 36px;align-items:center;justify-content:space-between;font-size:12px;gap:10px}
 #pwa-bar.show{display:flex}
 .pwa-btn{background:var(--acc);color:var(--bg);border:none;padding:5px 16px;border-radius:6px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;font-weight:700}
@@ -41,7 +37,6 @@ html,body{min-height:100%;background:var(--bg);color:var(--txt);font-family:'Jet
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes popIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
 @keyframes sR{from{opacity:0;transform:translateX(-12px)}to{opacity:1;transform:translateX(0)}}
-
 header{display:flex;align-items:center;justify-content:space-between;padding:14px 36px;border-bottom:1px solid var(--bor);position:sticky;top:0;background:var(--bg);z-index:50}
 .logo{font-family:'Bebas Neue';font-size:28px;letter-spacing:3px;color:var(--acc)}
 nav{display:flex;gap:3px}
@@ -54,7 +49,6 @@ nav{display:flex;gap:3px}
 main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 .panel{display:none;animation:fadeUp .22s ease}
 .panel.on{display:block}
-
 .cfgbar{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:24px}
 .grp{display:flex;gap:3px;background:var(--sur);border:1px solid var(--bor);border-radius:8px;padding:3px}
 .gb{background:transparent;border:none;color:var(--sub);padding:5px 13px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .14s;white-space:nowrap}
@@ -62,14 +56,11 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 .gb.on{background:var(--acc);color:var(--bg);font-weight:700}
 .tgl{background:transparent;border:1px solid var(--bor);color:var(--sub);padding:5px 13px;border-radius:6px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .14s}
 .tgl.on{background:color-mix(in srgb,var(--acc) 16%,transparent);border-color:var(--acc);color:var(--acc)}
-
 .lstats{display:flex;justify-content:center;gap:34px;margin-bottom:16px}
 .sp{text-align:center}
 .sv{font-family:'Bebas Neue';font-size:34px;color:var(--txt);letter-spacing:1px;line-height:1}
 .sv.a{color:var(--acc)}
 .sl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
-
-/* ── WORD BOX ── */
 #wbox{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:26px 30px;height:210px;overflow-y:auto;cursor:text;position:relative;user-select:none;scrollbar-width:none;-ms-overflow-style:none}
 #wbox::-webkit-scrollbar{display:none}
 #wbox::after{content:'';position:absolute;bottom:0;left:0;right:0;height:46px;background:linear-gradient(transparent,var(--sur));pointer-events:none}
@@ -80,15 +71,11 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 .ch.ok{color:var(--ok)}
 .ch.bad{color:var(--err);text-decoration:underline}
 .ch.ex{color:var(--err);opacity:.85}
-/* CARET: pure inline — zero position:absolute */
 .cr{display:inline-block;pointer-events:none;animation:blink 1s step-end infinite;vertical-align:middle;flex-shrink:0}
-/* hidden input: position:fixed so focus() never scrolls page */
 #hi{position:fixed;top:0;left:-9999px;opacity:0;width:1px;height:1px;pointer-events:none}
 .hint{text-align:center;margin-top:10px;font-size:11px;color:var(--sub)}
 .hint kbd,.fhint kbd{background:var(--sur);border:1px solid var(--bor);padding:2px 7px;border-radius:4px;font-size:10px}
 .capswarn{text-align:center;color:var(--err);font-size:12px;margin-bottom:8px}
-
-/* ── RESULTS ── */
 #res{display:none;animation:popIn .3s ease}
 .pbtxt{text-align:center;color:var(--acc);font-size:13px;margin-bottom:10px;font-weight:500;letter-spacing:.3px}
 .rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
@@ -102,8 +89,6 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 .achban{background:var(--sur);border:1px solid var(--acc);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-size:13px}
 .rbtn{background:transparent;color:var(--acc);border:2px solid var(--acc);padding:10px 28px;border-radius:8px;cursor:pointer;font-family:'JetBrains Mono';font-size:13px;font-weight:600;transition:all .18s;display:block;margin:4px auto}
 .rbtn:hover{background:var(--acc);color:var(--bg)}
-
-/* ── FLOW MODE ── */
 #fwrap{display:none}
 .fcats{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
 .fcat{background:transparent;border:1px solid var(--bor);color:var(--sub);padding:5px 14px;border-radius:20px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .16s}
@@ -119,10 +104,8 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 #fov{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;z-index:4;pointer-events:none}
 .fc{font-family:'JetBrains Mono';font-size:3rem;font-weight:600;letter-spacing:.06em;transition:color .05s}
 .fc.fp{color:var(--sub)}.fc.fo{color:var(--ok)}.fc.fb{color:var(--err);text-decoration:underline}
-.fcaret{display:inline-block;width:3px;height:1em;background:var(--cur);border-radius:2px;vertical-align:middle;animation:blink 1s step-end infinite;margin-left:2px}
+.fcaret{display:inline-block;width:3px;height:1em;background:var(--cur);border-radius:2px;vertical-align:middle;animation:blink 1s step-end infinite;margin-left:1px;margin-right:1px}
 .fhint{text-align:center;margin-top:9px;font-size:11px;color:var(--sub)}
-
-/* ── STATS ── */
 .sov{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
 .sc{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:15px;text-align:center}
 .sc .v{font-family:'Bebas Neue';font-size:30px;color:var(--acc);letter-spacing:1px}
@@ -132,8 +115,6 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 .htbl td{padding:8px 13px;border-bottom:1px solid color-mix(in srgb,var(--bor) 50%,transparent)}
 .htbl tr:hover td{background:var(--sur2)}
 .empty{text-align:center;color:var(--sub);padding:60px 20px;font-size:14px}
-
-/* ── LEADERBOARD ── */
 .lbh{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
 .lbh input{background:var(--sur);border:1px solid var(--bor);color:var(--txt);border-radius:7px;padding:7px 12px;font-family:'JetBrains Mono';font-size:13px;width:175px;outline:none;transition:border-color .16s}
 .lbh input:focus{border-color:var(--acc)}
@@ -141,8 +122,6 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 .lbtbl th{padding:9px 14px;text-align:left;color:var(--sub);font-size:10px;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--bor);font-weight:500}
 .lbtbl td{padding:11px 14px;border-bottom:1px solid color-mix(in srgb,var(--bor) 50%,transparent)}
 .lbwpm{font-family:'Bebas Neue';font-size:24px;letter-spacing:1px;color:var(--acc)}
-
-/* ── ACHIEVEMENTS ── */
 .agrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .acard{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:15px 17px;display:flex;align-items:center;gap:12px;opacity:.35;transition:all .2s}
 .acard.on{opacity:1;border-color:color-mix(in srgb,var(--acc) 55%,transparent)}
@@ -152,8 +131,6 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 .achk{margin-left:auto;color:var(--acc);font-size:16px;opacity:0}
 .acard.on .achk{opacity:1}
 .aprog{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-
-/* ── SETTINGS ── */
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .srow{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
 .slbl strong{display:block;font-size:14px;font-weight:500;margin-bottom:2px}
@@ -162,10 +139,14 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 .sbtn{background:transparent;border:1px solid var(--bor);color:var(--sub);padding:5px 11px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono';font-size:12px;transition:all .14s}
 .sbtn.on{background:color-mix(in srgb,var(--acc) 18%,transparent);border-color:var(--acc);color:var(--acc)}
 .twrap{background:var(--sur);border:1px solid var(--bor);border-radius:10px;overflow:hidden}
+/* Volume slider styling */
+#vol-slider{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--bor);outline:none;cursor:pointer}
+#vol-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--acc);cursor:pointer;transition:transform .15s}
+#vol-slider::-webkit-slider-thumb:hover{transform:scale(1.2)}
+#vol-slider::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--acc);cursor:pointer;border:none}
 </style>
 </head>
 <body>
-<!-- PWA Install Banner -->
 <div id="pwa-bar">
   <span>⌨ <strong style="color:var(--acc)">SwiftKeys</strong> can be installed as a desktop app!</span>
   <div style="display:flex;gap:8px;align-items:center">
@@ -194,9 +175,8 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
 
 <main>
 
-<!-- ════════════ TEST ════════════ -->
+<!-- TEST -->
 <div id="tab-test" class="panel on">
-
   <div class="cfgbar">
     <div class="grp" id="grp-mode">
       <button class="gb on" onclick="setMode('time',this)">Time</button>
@@ -231,7 +211,6 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
       <button class="tgl" id="tg-hard" onclick="togOpt('hard',this)">⚠ Hard</button>
       <button class="tgl on" id="tg-sound" onclick="togOpt('sound',this)">♪ Sound</button>
     </div>
-    <!-- Language selector -->
     <div class="lang-bar" id="lang-bar">
       <span style="font-size:10px;color:var(--sub);align-self:center;text-transform:uppercase;letter-spacing:1px">Lang:</span>
       <button class="lgb on" onclick="setLang('en',this)">🇬🇧 EN</button>
@@ -251,13 +230,11 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
     <div class="sp"><div class="sv" id="lv-e">0</div><div class="sl">errors</div></div>
   </div>
 
-  <!-- Normal typing box -->
   <div id="wbox" onclick="focusHI()"><div id="wcon"></div></div>
   <input id="hi" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
     oninput="onInput(event)" onkeydown="onKD(event)">
   <div class="hint" id="nhint">start typing to begin &nbsp;·&nbsp; <kbd>tab</kbd> to restart</div>
 
-  <!-- Flow mode -->
   <div id="fwrap">
     <div class="fcats">
       <button class="fcat on" onclick="setFCat('animals',this)">🐾 Animals</button>
@@ -276,7 +253,6 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
     <div class="fhint">type word &nbsp;·&nbsp; <kbd>space</kbd> = next &nbsp;·&nbsp; <kbd>tab</kbd> = restart</div>
   </div>
 
-  <!-- Results -->
   <div id="res">
     <div id="pbmsg" class="pbtxt" style="display:none">🎉 New Personal Best!</div>
     <div class="rgrid">
@@ -296,10 +272,10 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
   </div>
 </div>
 
-<!-- ════════════ STATS ════════════ -->
+<!-- STATS -->
 <div id="tab-stats" class="panel"><div id="statscon"></div></div>
 
-<!-- ════════════ LEADERBOARD ════════════ -->
+<!-- LEADERBOARD -->
 <div id="tab-lb" class="panel">
   <div class="lbh">
     <span style="font-size:13px;color:var(--sub)">Your name:</span>
@@ -309,13 +285,13 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
   <div id="lbcon"></div>
 </div>
 
-<!-- ════════════ ACHIEVEMENTS ════════════ -->
+<!-- ACHIEVEMENTS -->
 <div id="tab-ach" class="panel">
   <div class="aprog" id="aprog">0/0 unlocked</div>
   <div class="agrid" id="agrid"></div>
 </div>
 
-<!-- ════════════ SETTINGS ════════════ -->
+<!-- SETTINGS -->
 <div id="tab-set" class="panel">
   <div class="sgrid">
     <div class="srow">
@@ -349,6 +325,15 @@ main{max-width:860px;width:100%;margin:0 auto;padding:26px 18px}
       <div class="slbl"><strong>Reset All Data</strong>Clear history &amp; scores</div>
       <div class="sctrl"><button class="sbtn" style="color:var(--err);border-color:var(--err)" onclick="resetAll()">Reset</button></div>
     </div>
+  </div>
+
+  <!-- Volume Slider — full width below the grid -->
+  <div style="margin-top:12px;background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:14px 16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="slbl"><strong>Volume</strong>Keypress sound level</div>
+      <span id="vol-val" style="font-size:16px;color:var(--acc);font-family:'JetBrains Mono';font-weight:700;min-width:40px;text-align:right">70</span>
+    </div>
+    <input type="range" id="vol-slider" min="1" max="100" value="70" oninput="setVol(this.value)" style="width:100%">
   </div>
 
   <!-- Custom Word List Upload -->
@@ -399,8 +384,6 @@ const WL={
   medium:['about','above','across','action','actually','agree','already','always','another','answer','around','because','become','before','between','building','certain','change','children','coming','company','complete','consider','continue','control','countries','create','decided','develop','different','direct','during','either','enough','every','example','experience','family','finally','following','found','further','given','going','government','great','group','having','helps','however','human','important','include','including','increase','interest','involved','itself','known','large','later','learn','leave','level','likely','local','longer','making','matter','might','money','month','move','national','never','number','often','order','outside','own','part','people','place','plan','point','possible','power','program','provide','public','question','rather','real','reason','recent','result','right','school','second','since','small','social','something','sometimes','still','story','study','system','taken','through','together','toward','true','under','until','usually','various','water','where','which','while','whole','within','without','world','write','young','along','better','called','cause','city','close','done','draw','early','face','fact','feel','form','free','full','gave','hold','hour','idea','keep','knew','last','left','life','light','line','live','made','main','name','near','need','next','night','once','open','past','room','same','seem','set','show','side','simple','song','soon','state','stay','stop','sure','talk','watch'],
   hard:['accommodate','ambiguous','anomaly','apparatus','arbitrary','articulate','assassination','asterisk','bureaucratic','camouflage','catastrophic','circumference','clandestine','coincidence','commemorate','conscientious','controversial','crystallize','deteriorate','dilapidated','disappearance','disintegrate','ecclesiastical','embarrassment','exaggeration','exhilaration','extraordinary','facetious','fascinating','flabbergasted','gregarious','hallucination','hypocritical','idiosyncratic','illegitimate','incorrigible','indispensable','infrastructure','ingenious','instantaneous','juxtaposition','kaleidoscope','labyrinthine','magnificent','manipulative','metamorphosis','miscellaneous','mysterious','nonchalant','oblivious','omniscient','overwhelm','paradoxical','perseverance','phenomenon','photosynthesis','physiological','precarious','predominantly','psychologically','questionnaire','quintessential','reverberate','revolutionary','rigorous','scrupulous','silhouette','simultaneous','sophisticated','spontaneous','strenuous','subterranean','supernatural','surveillance','suspicious','synonymous','technological','tempestuous','theoretical','treacherous','unbelievable','undeniable','unnecessary','unprecedented','vaccination','vengeance','vulnerable','whimsical','zealousness']
 };
-
-// ── LANGUAGE WORD LISTS ──
 const LANG_WL={
   hi:{
     easy:['यह','वह','एक','में','है','का','के','की','और','को','से','पर','था','हो','जो','कि','भी','हम','तुम','आप','घर','काम','खाना','पानी','दिन','रात','बच्चा','माँ','बाप','भाई','बहन','दोस्त','शहर','गाँव','स्कूल','किताब','पेड़','फूल','नाम','समय'],
@@ -418,7 +401,6 @@ const LANG_WL={
     hard:['extraordinaire','responsabilité','incompréhensible','vraisemblablement','indépendamment','développement','environnement','gouvernement','manifestement','particulièrement','approximativement','caractéristique','correspondance','différemment','efficacement','fondamentalement','habituellement','immédiatement','naturellement','principalement']
   }
 };
-
 const QUOTES=['The only way to do great work is to love what you do. If you have not found it yet keep looking and do not settle.','In the middle of every difficulty lies opportunity. Success is not final failure is not fatal it is the courage to continue that counts.','It does not matter how slowly you go as long as you do not stop. Our greatest glory is not in never falling but in rising every time we fall.','The future belongs to those who believe in the beauty of their dreams. Do not watch the clock do what it does and keep going.','Believe you can and you are halfway there. Whether you think you can or you cannot you are right. The secret of getting ahead is getting started.','Two roads diverged in a wood and I took the one less traveled by and that has made all the difference in the world.','I have not failed I have just found ten thousand ways that will not work. The secret of success is to know something nobody else knows.','Life is what happens when you are busy making other plans. In three words I can sum up everything I have learned about life it goes on.'];
 const CSNIP=['function fibonacci(n) { if (n <= 1) return n; return fibonacci(n - 1) + fibonacci(n - 2); }','const arr = [1, 2, 3]; const sum = arr.reduce((acc, val) => acc + val, 0); console.log(sum);','class Stack { constructor() { this.items = []; } push(item) { this.items.push(item); } pop() { return this.items.pop(); } }','async function getData(url) { const res = await fetch(url); const data = await res.json(); return data; }','const sorted = arr.sort((a, b) => a - b); const idx = sorted.findIndex(x => x === target);','import { useState } from "react"; export default function Counter() { const [n, setN] = useState(0); return <button onClick={()=>setN(n+1)}>{n}</button>; }'];
 const FLOW={
@@ -448,12 +430,12 @@ const ACHS=[
 ];
 
 // ═══════════════════════════════════════════════
-// STATE
+// STATE — vol added
 // ═══════════════════════════════════════════════
 const G={
   mode:'time',tl:60,wc:50,diff:'medium',cont:'words',
-  pun:false,num:false,hard:false,sound:true,caret:'line',
-  lang:'en', customWords:[], useCustom:false,
+  pun:false,num:false,hard:false,sound:true,caret:'line',vol:0.7,
+  lang:'en',customWords:[],useCustom:false,
   words:[],cst:[],ci:0,inp:'',ts:'idle',
   t0:null,tleft:60,ticker:null,lticker:null,wtrack:[],
   fcat:'animals',fq:[],fidx:0,finp:'',ftyped:0,ferr:0,
@@ -461,7 +443,7 @@ const G={
 };
 
 // ═══════════════════════════════════════════════
-// AUDIO
+// AUDIO — volume multiplier applied
 // ═══════════════════════════════════════════════
 let AC=null;
 function getAC(){if(!AC)try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}return AC;}
@@ -470,14 +452,15 @@ function beep(type){
   const c=getAC();if(!c)return;
   const o=c.createOscillator(),g=c.createGain();
   o.connect(g);g.connect(c.destination);
-  if(type==='err'){o.type='sawtooth';o.frequency.value=160;g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.12);}
-  else if(type==='spc'){o.type='sine';o.frequency.setValueAtTime(600,c.currentTime);o.frequency.exponentialRampToValueAtTime(300,c.currentTime+.07);g.gain.setValueAtTime(.06,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.07);}
-  else{o.type='square';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.exponentialRampToValueAtTime(440,c.currentTime+.04);g.gain.setValueAtTime(.04,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.04);}
+  const v=G.vol||0.7;
+  if(type==='err'){o.type='sawtooth';o.frequency.value=160;g.gain.setValueAtTime(.18*v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.12);}
+  else if(type==='spc'){o.type='sine';o.frequency.setValueAtTime(600,c.currentTime);o.frequency.exponentialRampToValueAtTime(300,c.currentTime+.07);g.gain.setValueAtTime(.14*v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.07);}
+  else{o.type='square';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.exponentialRampToValueAtTime(440,c.currentTime+.04);g.gain.setValueAtTime(.10*v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.04);}
   o.start(c.currentTime);o.stop(c.currentTime+.15);
 }
 
 // ═══════════════════════════════════════════════
-// STORAGE
+// STORAGE — vol saved/loaded
 // ═══════════════════════════════════════════════
 function save(){
   try{
@@ -489,6 +472,7 @@ function save(){
     localStorage.setItem('sk_th',document.body.className||'');
     localStorage.setItem('sk_cr',G.caret);
     localStorage.setItem('sk_sn',G.sound);
+    localStorage.setItem('sk_vl',G.vol);
     localStorage.setItem('sk_lg',G.lang);
     if(G.customWords.length)localStorage.setItem('sk_cw',JSON.stringify(G.customWords));
   }catch(e){}
@@ -504,6 +488,7 @@ function load(){
     const th=localStorage.getItem('sk_th');if(th!==null)_applyTheme(th);
     const cr=localStorage.getItem('sk_cr');if(cr)G.caret=cr;
     const sn=localStorage.getItem('sk_sn');if(sn!==null)G.sound=(sn==='true');
+    const vl=localStorage.getItem('sk_vl');if(vl!==null)G.vol=parseFloat(vl)||0.7;
     const lg=localStorage.getItem('sk_lg');
     if(lg&&lg!=='en'){
       G.lang=lg;
@@ -526,13 +511,11 @@ function saveName(){G.name=document.getElementById('lbname').value||'Player';sav
 function genWords(){
   if(G.cont==='quotes')return QUOTES[Math.floor(Math.random()*QUOTES.length)].split(' ');
   if(G.cont==='code')return CSNIP[Math.floor(Math.random()*CSNIP.length)].split(' ');
-  // Custom words
   if(G.useCustom&&G.customWords.length>0){
     const n=G.mode==='time'?250:G.wc;const out=[];
     for(let i=0;i<n;i++)out.push(G.customWords[Math.floor(Math.random()*G.customWords.length)]);
     return out;
   }
-  // Language word list
   const list=G.lang!=='en'&&LANG_WL[G.lang]?LANG_WL[G.lang][G.diff]||LANG_WL[G.lang].easy:WL[G.diff];
   const n=G.mode==='time'?250:G.wc;
   const out=[];
@@ -565,7 +548,6 @@ function renderWords(){
   });
   placeCaret();
 }
-
 function updWord(wi){
   const w=G.words[wi];const st=G.cst[wi]||{};
   const el=document.getElementById('w'+wi);if(!el)return;
@@ -580,8 +562,6 @@ function updWord(wi){
     s.className='ch ex';s.textContent=G.inp[+k]||'';el.appendChild(s);
   });
 }
-
-// KEY FUNCTION: caret is a plain inline flex child, NO position:absolute
 function placeCaret(){
   document.querySelectorAll('.cr').forEach(c=>c.remove());
   const wEl=document.getElementById('w'+G.ci);if(!wEl)return;
@@ -599,7 +579,6 @@ function placeCaret(){
   if(pos<chars.length)wEl.insertBefore(cr,chars[pos]);
   else wEl.appendChild(cr);
 }
-
 function scrollBox(){
   const box=document.getElementById('wbox');
   const wEl=document.getElementById('w'+G.ci);
@@ -616,25 +595,18 @@ function boot(){
   G.ts='idle';G.t0=null;G.tleft=G.tl;G.wtrack=[];G.ci=0;G.inp='';
   document.getElementById('hi').value='';
   document.getElementById('res').style.display='none';
-
   const isFlow=G.cont==='flow';
   document.getElementById('wbox').style.display=isFlow?'none':'block';
   document.getElementById('nhint').style.display=isFlow?'none':'';
   document.getElementById('fwrap').style.display=isFlow?'block':'none';
   document.getElementById('lstats').style.display='';
-
-  const tDisp=G.mode==='time'?G.tl:(isFlow?`0/${G.wc}`:`0/${G.wc}`);
   document.getElementById('lv-t').textContent=G.mode==='time'?G.tl:(isFlow?`0/${G.wc}`:'0');
   document.getElementById('lv-tl').textContent=G.mode==='time'?'time':'words';
   document.getElementById('lv-w').textContent='0';
   document.getElementById('lv-a').textContent='100%';
   document.getElementById('lv-e').textContent='0';
-
   if(isFlow){bootFlow();}
-  else{
-    G.words=genWords();G.cst=G.words.map(()=>({}));
-    renderWords();document.getElementById('wbox').scrollTop=0;
-  }
+  else{G.words=genWords();G.cst=G.words.map(()=>({}));renderWords();document.getElementById('wbox').scrollTop=0;}
   focusHI();
 }
 function focusHI(){document.getElementById('hi').focus({preventScroll:true});}
@@ -647,20 +619,16 @@ function onKD(e){
   if(e.key==='Escape'){boot();return;}
   document.getElementById('capswarn').style.display=e.getModifierState('CapsLock')?'block':'none';
 }
-
 function onInput(e){
   if(G.ts==='finished')return;
   const val=e.target.value;
   if(G.cont==='flow'){handleFlow(val,e);return;}
-
   if(G.ts==='idle'){G.ts='running';G.t0=Date.now();startTicks();}
-
   if(val.endsWith(' ')){
     if(G.inp.trim()===''){e.target.value='';return;}
     commitWord();e.target.value='';return;
   }
   if(G.hard&&val.length<G.inp.length){e.target.value=G.inp;return;}
-
   const prev=G.inp.length;
   G.inp=val;
   const wd=G.words[G.ci];const st={};
@@ -673,7 +641,6 @@ function onInput(e){
     const li=val.length-1;beep(li<wd.length&&val[li]===wd[li]?'key':'err');
   }
 }
-
 function commitWord(){
   const wd=G.words[G.ci];const val=G.inp;const st={};
   for(let i=0;i<Math.max(val.length,wd.length);i++){
@@ -704,7 +671,6 @@ function startTicks(){
   }
   G.lticker=setInterval(liveTick,500);
 }
-
 function liveTick(){
   if(!G.t0)return;
   if(G.cont==='flow'){liveFlowTick();return;}
@@ -715,7 +681,6 @@ function liveTick(){
   document.getElementById('lv-e').textContent=er;
   if(G.mode==='words')document.getElementById('lv-t').textContent=`${G.ci}/${G.wc}`;
 }
-
 function ccChars(){let c=0;for(let i=0;i<G.ci;i++){const st=G.cst[i]||{};Object.values(st).forEach(v=>{if(v==='ok')c++;});}return c;}
 function errChars(){let e=0;for(let i=0;i<=G.ci;i++){const st=G.cst[i]||{};Object.values(st).forEach(v=>{if(v==='bad'||v==='ex')e++;});}return e;}
 function calcWPM(cc,sec){return sec<0.5?0:Math.round(cc/5/(sec/60));}
@@ -744,7 +709,6 @@ function finishTest(){
   }
   doFinish({wpm:w,accuracy:acc,errors:er,correctWords:cw,correctChars:cch,time:Math.round(el),consistency:con,date:new Date().toLocaleDateString(),wpmData:[...G.wtrack],hardMode:G.hard,cont:G.cont,dur:G.mode==='time'?G.tl:0});
 }
-
 function doFinish(r){
   const isPB=r.wpm>G.pb;if(isPB)G.pb=r.wpm;
   G.hist.unshift(r);if(G.hist.length>200)G.hist.pop();
@@ -757,7 +721,6 @@ function doFinish(r){
   const newA=[];ACHS.forEach(a=>{if(!G.achs.includes(a.id)&&a.chk(r,G.hist)){G.achs.push(a.id);newA.push(a);}});
   save();showRes(r,isPB,newA);
 }
-
 function showRes(r,isPB,newA){
   document.getElementById('wbox').style.display='none';
   document.getElementById('fwrap').style.display='none';
@@ -783,7 +746,7 @@ function showRes(r,isPB,newA){
 function gv(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
 
 // ═══════════════════════════════════════════════
-// FLOW MODE
+// FLOW MODE — drawFOv fixed: caret moves letter by letter
 // ═══════════════════════════════════════════════
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
@@ -795,7 +758,6 @@ function bootFlow(){
   buildFTrack();drawFOv();
   if(G.mode==='words')document.getElementById('lv-t').textContent=`0/${G.wc}`;
 }
-
 function buildFTrack(){
   const tr=document.getElementById('ftrack');
   tr.innerHTML='';tr.style.transform='translateY(50px)';
@@ -806,7 +768,6 @@ function buildFTrack(){
   }
   styleFSlots();
 }
-
 function styleFSlots(){
   for(let i=0;i<20;i++){
     const sl=document.getElementById('fs'+i);if(!sl)continue;
@@ -820,18 +781,28 @@ function styleFSlots(){
   }
 }
 
+// FIX: caret placed at G.finp.length position, moves letter by letter
 function drawFOv(){
   const ov=document.getElementById('fov');ov.innerHTML='';
   const word=G.fq[G.fidx]||'';
+  const allChars=[];
   word.split('').forEach((ch,i)=>{
     const s=document.createElement('span');s.className='fc';s.textContent=ch;
     if(i<G.finp.length)s.classList.add(G.finp[i]===ch?'fo':'fb');else s.classList.add('fp');
-    ov.appendChild(s);
+    allChars.push(s);
   });
   for(let i=word.length;i<G.finp.length;i++){
-    const s=document.createElement('span');s.className='fc fb';s.textContent=G.finp[i];ov.appendChild(s);
+    const s=document.createElement('span');s.className='fc fb';s.textContent=G.finp[i];allChars.push(s);
   }
-  const cr=document.createElement('span');cr.className='fcaret';ov.appendChild(cr);
+  const cr=document.createElement('span');cr.className='fcaret';
+  const caretPos=G.finp.length;
+  // Insert caret before character at caretPos
+  allChars.forEach((s,i)=>{
+    if(i===caretPos)ov.appendChild(cr);
+    ov.appendChild(s);
+  });
+  // If caret is at end (or word is empty)
+  if(caretPos>=allChars.length)ov.appendChild(cr);
 }
 
 function handleFlow(val,e){
@@ -842,7 +813,6 @@ function handleFlow(val,e){
   if(val.length>prev){const li=val.length-1;const wd=G.fq[G.fidx]||'';beep(li<wd.length&&val[li]===wd[li]?'key':'err');}
   liveFlowTick();
 }
-
 function liveFlowTick(){
   if(!G.t0)return;
   const el=(Date.now()-G.t0)/1000,est=Math.max(0,G.ftyped*5-G.ferr);
@@ -852,7 +822,6 @@ function liveFlowTick(){
   document.getElementById('lv-e').textContent=G.ferr;
   if(G.mode==='words')document.getElementById('lv-t').textContent=`${G.ftyped}/${G.wc}`;
 }
-
 function flowNext(){
   const word=G.fq[G.fidx]||'';let er=0;
   for(let i=0;i<Math.max(G.finp.length,word.length);i++){if(G.finp[i]!==word[i])er++;}
@@ -873,7 +842,6 @@ function flowNext(){
   styleFSlots();drawFOv();liveFlowTick();
   if(G.mode==='words'&&G.ftyped>=G.wc)finishFlow();
 }
-
 function finishFlow(){
   clearInterval(G.ticker);clearInterval(G.lticker);G.ts='finished';
   const el=(Date.now()-G.t0)/1000,est=Math.max(0,G.ftyped*5-G.ferr);
@@ -976,6 +944,7 @@ function _applyTheme(t){
 function applyTheme(t,btn){_applyTheme(t);save();}
 function setCaret(s,btn){G.caret=s;document.querySelectorAll('#car-grp .sbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');save();placeCaret();}
 function setSnd(v,btn){G.sound=v;document.querySelectorAll('#snd-grp .sbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('tg-sound').classList.toggle('on',v);save();}
+function setVol(v){G.vol=parseInt(v)/100;document.getElementById('vol-val').textContent=v;save();}
 
 // ═══════════════════════════════════════════════
 // TABS
@@ -1004,12 +973,9 @@ function setLang(lang,btn){
   G.lang=lang;
   document.querySelectorAll('.lgb').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  // Toggle Devanagari font class on body
   document.body.classList.toggle('lang-hi',lang==='hi');
-  // Show/hide diff group (Hindi hard list is small)
   const hasDiff=lang==='en'||lang==='es'||lang==='fr';
   document.getElementById('grp-diff').style.display=hasDiff&&G.cont==='words'?'':'none';
-  // Custom lang: show custom lang button
   if(lang==='custom'){document.getElementById('lg-custom').style.display='';btn.classList.add('on');}
   if(lang!=='custom'){G.useCustom=false;}
   save();boot();
@@ -1018,9 +984,7 @@ function setLang(lang,btn){
 // ═══════════════════════════════════════════════
 // CUSTOM WORD LIST
 // ═══════════════════════════════════════════════
-function parseWords(text){
-  return text.split(/[\n,\s]+/).map(w=>w.trim()).filter(w=>w.length>0);
-}
+function parseWords(text){return text.split(/[\n,\s]+/).map(w=>w.trim()).filter(w=>w.length>0);}
 function handleFileUpload(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
@@ -1043,7 +1007,6 @@ function loadCustomWords(text,source){
   const words=parseWords(text);
   if(words.length<2){alert('Need at least 2 words. Got: '+words.length);return;}
   G.customWords=words;
-  // Show preview
   document.getElementById('custom-count').textContent=words.length;
   document.getElementById('custom-preview').style.display='block';
   const tags=document.getElementById('custom-tags');
@@ -1052,7 +1015,6 @@ function loadCustomWords(text,source){
 function useCustomWords(){
   if(!G.customWords.length)return;
   G.useCustom=true;
-  // Switch to custom lang in lang bar
   document.querySelectorAll('.lgb').forEach(b=>b.classList.remove('on'));
   const cb=document.getElementById('lg-custom');cb.style.display='';cb.classList.add('on');
   G.lang='custom';
@@ -1071,7 +1033,7 @@ function clearCustomWords(){
 }
 
 // ═══════════════════════════════════════════════
-// PWA
+// PWA — FIXED: closing bracket was missing
 // ═══════════════════════════════════════════════
 let _deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{
@@ -1087,13 +1049,11 @@ function installPWA(){
   _deferredPrompt.prompt();
   _deferredPrompt.userChoice.then(()=>{_deferredPrompt=null;document.getElementById('pwa-bar').classList.remove('show');});
 }
-// Setup PWA manifest dynamically
 (function setupPWA(){
   const icon='assets/swiftkeys-512x512.png';
-  const manifest={name:'SwiftKeys — Typing Test',short_name:'SwiftKeys',description:'A fast, beautiful typing speed test app',start_url:'./',display:'standalone',background_color:'#0f0f13',theme_color:'#e2b714',icons:[{src:icon,sizes:'512x512',type:'image/png'}]
+  const manifest={name:'SwiftKeys — Typing Test',short_name:'SwiftKeys',description:'A fast, beautiful typing speed test app',start_url:'./',display:'standalone',background_color:'#0f0f13',theme_color:'#e2b714',icons:[{src:icon,sizes:'512x512',type:'image/png'}]};
   const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
   document.getElementById('pwa-manifest').href=URL.createObjectURL(blob);
-  // Register service worker via blob
   if('serviceWorker' in navigator){
     const swCode=`const C='sk-v1';self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.add('.'))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k))))));`;
     const swBlob=new Blob([swCode],{type:'application/javascript'});
@@ -1105,6 +1065,11 @@ function installPWA(){
 // START
 // ═══════════════════════════════════════════════
 load();
+// Init volume slider to match loaded G.vol
+(function(){
+  const s=document.getElementById('vol-slider');
+  if(s){const pct=Math.round((G.vol||0.7)*100);s.value=pct;document.getElementById('vol-val').textContent=pct;}
+})();
 boot();
 </script>
 </body>
