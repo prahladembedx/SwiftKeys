@@ -95,8 +95,17 @@ swiftkeys/
 
 ## 📄 License
 
-MIT — use it, modify it, share it freely.
+Copyright (c) 2026 prahladembedx. All Rights Reserved.
 
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Made with ❤️ — Star ⭐ the repo if you like it!
+This repository is publicly visible for inspiration and learning purposes only. Copying, redistribution, or commercial use of this project without written permission from the author is not allowed.
+
+If you'd like to collaborate or have any questions, feel free to reach out! 🙂
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    "Built with passion, protected with purpose."
+            AUTHOR : prahladembedx
+
+⭐ Star this repo if you found it helpful!
