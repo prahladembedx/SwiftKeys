@@ -74,9 +74,7 @@ swiftkeys/
 ├── package.json            ← Project metadata & scripts
 ├── .gitignore              ← Git ignore rules
 ├── README.md               ← This file
-└── .github/
-    └── workflows/
-        └── deploy.yml      ← Auto-deploy to GitHub Pages
+
 ```
 
 > SwiftKeys is intentionally a **single HTML file** — ultra-portable, zero dependencies at runtime.
