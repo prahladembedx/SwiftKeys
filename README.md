@@ -74,7 +74,7 @@ SwiftKeys/
 ├── package.json           # Project metadata
 ├── .gitignore             # Git ignore rules
 └── README.md              # Project documentation
----
+```
 
 ## 🎯 Roadmap
 
