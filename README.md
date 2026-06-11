@@ -2,10 +2,6 @@
 
 > A feature-rich, beautiful typing test application — pure HTML, CSS, and JavaScript. No frameworks, no build step. Just open and type.
 
-![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-
 ---
 
 ## 🌐 Live Demo
@@ -69,16 +65,15 @@
 ## 📁 Project Structure
 
 ```
-swiftkeys/
-├── index.html              ← Complete app (all-in-one)
-├── package.json            ← Project metadata & scripts
-├── .gitignore              ← Git ignore rules
-├── README.md               ← This file
-
-```
-
-> SwiftKeys is intentionally a **single HTML file** — ultra-portable, zero dependencies at runtime.
-
+SwiftKeys/
+├── assets/
+│   ├── icon-192.png       # PWA icon (192x192)
+│   └── icon-512.png       # PWA icon (512x512)
+├── index.html             # Main app (single-file)
+├── favicon.ico            # Browser tab icon
+├── package.json           # Project metadata
+├── .gitignore             # Git ignore rules
+└── README.md              # Project documentation
 ---
 
 ## 🎯 Roadmap
@@ -106,4 +101,8 @@ If you'd like to collaborate or have any questions, feel free to reach out! 🙂
     "Built with passion, protected with purpose."
             AUTHOR : prahladembedx
 
+<div align="center">
+
 ⭐ Star this repo if you found it helpful!
+
+</div>
